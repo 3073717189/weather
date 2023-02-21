@@ -27,17 +27,17 @@ import java.util.Locale;
 import java.util.Map;
 
 public class SettingActivity extends AppCompatActivity {
-    Switch night_mode_switch;//夜间模式开关
+    Switch            night_mode_switch;//夜间模式开关
     SharedPreferences night_mode;//夜间模式相关状态信息
     SharedPreferences view_state;//记录控件显示状态信息
-    Switch air_switch,forecast_switch,wind_switch,life_switch,other_switch;
+    Switch            air_switch, forecast_switch, wind_switch, life_switch, other_switch;
     private int start_hourOfDay, start_minute, end_hourOfDay, end_minute;
 
     String TAG;
 
     //以下是夜间模式时间段相关
-    private TextView start_time;
-    private TextView end_time;
+    private TextView         start_time;
+    private TextView         end_time;
     private TimePickerDialog start_timeDialog, end_timeDialog;
     private Switch night_time_switch;
     private Switch service_switch;
@@ -52,14 +52,14 @@ public class SettingActivity extends AppCompatActivity {
 
         night_mode = getSharedPreferences("night_mode", MODE_PRIVATE);//获取夜间模式相关状态信息
         view_state = getSharedPreferences("view_state", MODE_PRIVATE);//获取控件显示状态相关信息
-InitSwitch();//初始化控件显示开关
+        InitSwitch();//初始化控件显示开关
 
 
-        ad_button=(Button)findViewById(R.id.ad_Button);
+        ad_button = (Button) findViewById(R.id.ad_Button);
         ad_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(SettingActivity.this,ADActivity.class);
+                Intent intent = new Intent(SettingActivity.this, ADActivity.class);
                 startActivity(intent);//进入广告页
             }
         });
@@ -140,82 +140,86 @@ InitSwitch();//初始化控件显示开关
             }
         });
     }
-public void InitSwitch(){//读取开关状态，当开关状态改变时记录开关状态
-        air_switch=(Switch) findViewById(R.id.air_switch);
-        forecast_switch=(Switch) findViewById(R.id.forecast_switch);
-        wind_switch=(Switch) findViewById(R.id.wind_switch);
-        life_switch=(Switch) findViewById(R.id.life_switch);
-        other_switch=(Switch) findViewById(R.id.other_switch);
-    service_switch=(Switch)findViewById(R.id.service_switch);
 
-        air_switch.setChecked(view_state.getBoolean("air_state",false));
-    air_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+    public void InitSwitch() {//读取开关状态，当开关状态改变时记录开关状态
+        air_switch = (Switch) findViewById(R.id.air_switch);
+        forecast_switch = (Switch) findViewById(R.id.forecast_switch);
+        wind_switch = (Switch) findViewById(R.id.wind_switch);
+        life_switch = (Switch) findViewById(R.id.life_switch);
+        other_switch = (Switch) findViewById(R.id.other_switch);
+        service_switch = (Switch) findViewById(R.id.service_switch);
 
-            view_state.edit().putBoolean("air_state",b).commit();
+        air_switch.setChecked(view_state.getBoolean("air_state", false));
+        air_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-        }
-    });
-    forecast_switch.setChecked(view_state.getBoolean("forecast_state",false));
-    forecast_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                view_state.edit().putBoolean("air_state", b).commit();
 
-            view_state.edit().putBoolean("forecast_state",b).commit();
+            }
+        });
+        forecast_switch.setChecked(view_state.getBoolean("forecast_state", false));
+        forecast_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-        }
-    });
-    wind_switch.setChecked(view_state.getBoolean("wind_state",false));
-    wind_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                view_state.edit().putBoolean("forecast_state", b).commit();
 
-            view_state.edit().putBoolean("wind_state",b).commit();
+            }
+        });
+        wind_switch.setChecked(view_state.getBoolean("wind_state", false));
+        wind_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-        }
-    });
-    life_switch.setChecked(view_state.getBoolean("life_state",false));
-    life_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                view_state.edit().putBoolean("wind_state", b).commit();
 
-            view_state.edit().putBoolean("life_state",b).commit();
+            }
+        });
+        life_switch.setChecked(view_state.getBoolean("life_state", false));
+        life_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-        }
-    });
-    other_switch.setChecked(view_state.getBoolean("other_state",false));
-    other_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                view_state.edit().putBoolean("life_state", b).commit();
 
-            view_state.edit().putBoolean("other_state",b).commit();
+            }
+        });
+        other_switch.setChecked(view_state.getBoolean("other_state", false));
+        other_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-        }
+                view_state.edit().putBoolean("other_state", b).commit();
 
-    });
-    service_switch.setChecked(view_state.getBoolean("service_state",false));
-    service_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            }
 
-            view_state.edit().putBoolean("service_state",b).commit();
-if(b){Intent service_intent = new Intent(getApplicationContext(), WeatherService.class);
-            startService(service_intent);}//启动通知栏服务
-            else {
-    Intent service_intent = new Intent(getApplicationContext(), WeatherService.class);
-    stopService(service_intent);
-}
-        }
+        });
+        service_switch.setChecked(view_state.getBoolean("service_state", false));
+        service_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-    });
+                view_state.edit().putBoolean("service_state", b).commit();
+                if (b) {
+                    Intent service_intent = new Intent(getApplicationContext(), WeatherService.class);
+                    startService(service_intent);
+                }//启动通知栏服务
+                else {
+                    Intent service_intent = new Intent(getApplicationContext(), WeatherService.class);
+                    stopService(service_intent);
+                }
+            }
 
-}
-public void onBackPressed(){
+        });
 
-    Intent intent=new Intent(SettingActivity.this,MainActivity.class);
-    startActivity(intent);
-    finish();
-}
+    }
+
+    public void onBackPressed() {
+
+        Intent intent = new Intent(SettingActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
 }
