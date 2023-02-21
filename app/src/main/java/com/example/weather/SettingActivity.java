@@ -55,7 +55,7 @@ public class SettingActivity extends AppCompatActivity {
         view_state = getSharedPreferences("view_state", MODE_PRIVATE);//获取控件显示状态相关信息
 InitSwitch();//初始化控件显示开关
 
-//设置透明状态栏，对应xml文件中添加属性android:fitsSystemWindows="true"
+//设置透明状态栏，对应xml文件中添加属性android:fitsSystemWindows="true"，此活动有标题栏，将该属性放置标题栏
         Window window = getWindow();
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE |View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         window.setStatusBarColor(Color.TRANSPARENT);
