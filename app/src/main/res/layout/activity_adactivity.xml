@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ADActivity">
+   <!--android:fitsSystemWindows="true"   沉浸式状态栏，活动尚未完成，暂时不添加-->
+
     <!--广告功能，无正式权限暂时无法获取
         <Button
             android:id="@+id/button_rw"

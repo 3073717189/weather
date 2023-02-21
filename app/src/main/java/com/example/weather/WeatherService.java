@@ -134,7 +134,7 @@ public class WeatherService extends Service {
                                     builder.setContentText(dailyBeanList.get(0).getTempMin() + "-"
                                             + dailyBeanList.get(0).getTempMax() + "℃");
                                     notificationManager.notify(1, builder.build());
-                                    Toast.makeText(getApplicationContext(), "数据更新了", Toast.LENGTH_SHORT).show();
+
 
                                 }
                             });

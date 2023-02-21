@@ -7,6 +7,7 @@
     android:background="@drawable/background"
     android:orientation="vertical"
     tools:context=".MainActivity"
+    android:fitsSystemWindows="true"
     >
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -38,7 +39,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:textColor="#FFFFFF"
-                    android:textSize="30dp" />
+                    android:textSize="25dp" />
 
                 <ImageButton
                     android:id="@+id/setting"
