@@ -12,6 +12,7 @@ import android.util.Log;
 
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -80,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
 
      //   Intent update_intent=new Intent(this,AutoUpdateService.class);

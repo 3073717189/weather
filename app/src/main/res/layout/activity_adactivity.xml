@@ -5,11 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ADActivity">
-
-    <Button
-        android:id="@+id/button_rw"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        tools:ignore="MissingConstraints" />
+    <!--广告功能，无正式权限暂时无法获取
+        <Button
+            android:id="@+id/button_rw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Button"
+            tools:ignore="MissingConstraints" />
+            -->
 </androidx.constraintlayout.widget.ConstraintLayout>

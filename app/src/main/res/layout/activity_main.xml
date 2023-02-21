@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:background="@drawable/background"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    >
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh"
@@ -26,8 +27,8 @@
 
                 <ImageButton
                     android:id="@+id/city_list"
-                    android:layout_width="45dp"
-                    android:layout_height="40dp"
+                    android:layout_width="35dp"
+                    android:layout_height="30dp"
                     android:background="@drawable/button_switch" />
 
                 <TextView
@@ -41,8 +42,8 @@
 
                 <ImageButton
                     android:id="@+id/setting"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:background="@drawable/button_setting" />
             </LinearLayout>
 
@@ -152,7 +153,8 @@
                     android:id="@+id/forecast"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"><!--七天天气预报-->
+                    android:orientation="vertical"
+                    android:padding="10dp"><!--七天天气预报-->
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="30dp" /><!--增加空白区域使界面更美观-->
@@ -239,8 +241,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"><!--生活建议-->
+                    android:padding="10dp"><!--生活建议-->
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="30dp" /><!--增加空白区域使界面更美观-->
@@ -288,7 +289,8 @@
                     android:id="@+id/other"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"><!--其他-->
+                    android:orientation="vertical"
+                    android:padding="10dp"><!--其他-->
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="30dp" /><!--增加空白区域使界面更美观-->
@@ -297,18 +299,19 @@
                         android:layout_height="wrap_content">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="center"
+                            android:gravity="left"
+                            android:paddingLeft="50dp"
                             android:text="相对湿度"
                             android:textColor="#FFFFFF" />
 
                         <TextView
                             android:id="@+id/humidity_now"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="3"
+                            android:layout_weight="1"
                             android:gravity="center"
                             android:textColor="#FFFFFF" />
                     </LinearLayout>
@@ -318,18 +321,19 @@
                         android:layout_height="wrap_content">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="center"
+                            android:gravity="left"
+                            android:paddingLeft="50dp"
                             android:text="降水量"
                             android:textColor="#FFFFFF" />
 
                         <TextView
                             android:id="@+id/precip_now"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="3"
+                            android:layout_weight="1"
                             android:gravity="center"
                             android:textColor="#FFFFFF" />
                     </LinearLayout>
@@ -339,18 +343,19 @@
                         android:layout_height="wrap_content">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="center"
+                            android:gravity="left"
+                            android:paddingLeft="50dp"
                             android:text="大气压强"
                             android:textColor="#FFFFFF" />
 
                         <TextView
                             android:id="@+id/pressure_now"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="3"
+                            android:layout_weight="1"
                             android:gravity="center"
                             android:textColor="#FFFFFF" />
                     </LinearLayout>
@@ -360,18 +365,19 @@
                         android:layout_height="wrap_content">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="center"
+                            android:gravity="left"
+                            android:paddingLeft="50dp"
                             android:text="能见度"
                             android:textColor="#FFFFFF" />
 
                         <TextView
                             android:id="@+id/vis_now"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="3"
+                            android:layout_weight="1"
                             android:gravity="center"
                             android:textColor="#FFFFFF" />
                     </LinearLayout>
@@ -381,18 +387,19 @@
                         android:layout_height="wrap_content">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="center"
+                            android:gravity="left"
+                            android:paddingLeft="50dp"
                             android:text="当前云量"
                             android:textColor="#FFFFFF" />
 
                         <TextView
                             android:id="@+id/dew_now"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="3"
+                            android:layout_weight="1"
                             android:gravity="center"
                             android:textColor="#FFFFFF" />
                     </LinearLayout>
