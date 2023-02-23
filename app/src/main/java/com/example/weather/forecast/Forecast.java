@@ -1,4 +1,4 @@
-package com.example.weather;
+package com.example.weather.forecast;
 
 public class Forecast {
     private String date;

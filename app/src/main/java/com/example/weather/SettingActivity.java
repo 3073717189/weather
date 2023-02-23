@@ -7,9 +7,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -17,15 +15,8 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
-import com.qq.e.ads.rewardvideo.RewardVideoAD;
-import com.qq.e.ads.rewardvideo.RewardVideoADListener;
-import com.qq.e.ads.rewardvideo.ServerSideVerificationOptions;
-import com.qq.e.comm.util.AdError;
-
-import java.util.Locale;
-import java.util.Map;
+import com.example.weather.service.WeatherService;
 
 public class SettingActivity extends AppCompatActivity {
     Switch night_mode_switch;//夜间模式开关

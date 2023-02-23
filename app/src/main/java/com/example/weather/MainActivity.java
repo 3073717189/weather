@@ -13,14 +13,15 @@ import android.util.Log;
 
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.location.LocationClient;
-import com.example.weather.adapter.ForecastAdapter;
+import com.example.weather.forecast.Forecast;
+import com.example.weather.forecast.ForecastAdapter;
+import com.example.weather.service.WeatherService;
 import com.google.gson.Gson;
 import com.qweather.sdk.bean.IndicesBean;
 import com.qweather.sdk.bean.air.AirNowBean;

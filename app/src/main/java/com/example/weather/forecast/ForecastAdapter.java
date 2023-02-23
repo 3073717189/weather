@@ -1,4 +1,4 @@
-package com.example.weather.adapter;
+package com.example.weather.forecast;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.example.weather.Forecast;
 import com.example.weather.R;
 
 import java.util.List;
