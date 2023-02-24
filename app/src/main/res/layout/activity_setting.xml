@@ -260,6 +260,27 @@
 
 
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_weight="1"
+                        android:gravity="center|start"
+                        android:text="逐小时预报"
+                        android:textSize="20dp" />
+
+                    <Switch
+                        android:id="@+id/hourly_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp" />
+
+
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -284,6 +305,7 @@
 
 
                 </LinearLayout>
+
             </LinearLayout>
 
             <TextView

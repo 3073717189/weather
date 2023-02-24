@@ -22,7 +22,7 @@ public class SettingActivity extends AppCompatActivity {
     Switch night_mode_switch;//夜间模式开关
     SharedPreferences night_mode;//夜间模式相关状态信息
     SharedPreferences view_state;//记录控件显示状态信息
-    Switch air_switch,forecast_switch,wind_switch,life_switch,other_switch;
+    Switch air_switch,forecast_switch,wind_switch,life_switch,other_switch,hourly_switch;
     private int start_hourOfDay, start_minute, end_hourOfDay, end_minute;
 
     String TAG;
@@ -144,6 +144,7 @@ public void InitSwitch(){//读取开关状态，当开关状态改变时记录�
         life_switch=(Switch) findViewById(R.id.life_switch);
         other_switch=(Switch) findViewById(R.id.other_switch);
     service_switch=(Switch)findViewById(R.id.service_switch);
+    hourly_switch=(Switch)findViewById(R.id.hourly_switch);
 
         air_switch.setChecked(view_state.getBoolean("air_state",true));
     air_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -191,6 +192,16 @@ public void InitSwitch(){//读取开关状态，当开关状态改变时记录�
         }
 
     });
+    hourly_switch.setChecked(view_state.getBoolean("hourly_state",true));
+    hourly_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+            view_state.edit().putBoolean("hourly_state",b).commit();
+
+        }
+
+    });
     service_switch.setChecked(view_state.getBoolean("service_state",false));
     service_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
         @Override
@@ -206,6 +217,7 @@ if(b){Intent service_intent = new Intent(getApplicationContext(), WeatherService
         }
 
     });
+
 
 }
 public void onBackPressed(){

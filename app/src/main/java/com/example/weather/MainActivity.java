@@ -375,6 +375,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout wind = (LinearLayout) findViewById(R.id.wind);
         LinearLayout life = (LinearLayout) findViewById(R.id.life);
         LinearLayout other = (LinearLayout) findViewById(R.id.other);
+        LinearLayout hourly=(LinearLayout) findViewById(R.id.hourly);
         if (!view_state.getBoolean("air_state", true))
             air.setVisibility(View.GONE);
         if (!view_state.getBoolean("forecast_state", true))
@@ -385,7 +386,8 @@ public class MainActivity extends AppCompatActivity {
             life.setVisibility(View.GONE);
         if (!view_state.getBoolean("other_state", true))
             other.setVisibility(View.GONE);
-
+        if (!view_state.getBoolean("hourly_state", true))
+            hourly.setVisibility(View.GONE);
     }
 private void InitRecyclerView(){
         //初始化逐小时显示天气的rv
@@ -418,9 +420,9 @@ QWeather.getWeather24Hourly(getApplicationContext(),
                     int i;
                     for(i=0;i<hourlyDate.size();i++){
                         Hourly hourly=new Hourly(hourlyDate.get(i).getTemp()+"℃",hourlyDate.get(i).getText(),
-                                hourlyDate.get(i).getWindScale()+"级",hourlyDate.get(i).getFxTime());
+                                hourlyDate.get(i).getWindScale()+"级",hourlyDate.get(i).getFxTime().substring(11,16));
+                        //上述的getFxTime返回的数据过长，只截取第12-16的内容，其中包含逐小时预报天气的小时和分钟信息
                         hourlyList.add(hourly);
-
                     }
                     hourlyAdapter=new HourlyAdapter(hourlyList);
                     hourlyAdapter.notifyDataSetChanged();
