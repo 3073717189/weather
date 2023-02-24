@@ -2,9 +2,11 @@ package com.example.weather;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -25,8 +27,15 @@ public class ADActivity extends AppCompatActivity {
     String TAG;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);//删除标题栏
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adactivity);
+/* 暂时不设置，因为布局尚未完成，会导致状态栏无法看清
+        //设置透明状态栏，对应xml文件中添加属性android:fitsSystemWindows="true"
+        Window window = getWindow();
+        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE |View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        window.setStatusBarColor(Color.TRANSPARENT);
+*/
         GDTAdSdk.init(getApplicationContext(),"201826896");
          RewardVideoAD rewardVideoAD = new RewardVideoAD(this, "5015403540275419", new RewardVideoADListener() {
              @Override

@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />    <!-- 必要权限，权限会用在下载类广告安装应用时使用 -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
         android:name="org.litepal.LitePalApplication"
@@ -19,13 +19,17 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/weather"
-        tools:replace="android:allowBackup"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Weather"
+        tools:replace="android:allowBackup"
         tools:targetApi="31">
+        <activity
+            android:name=".SearchActivity"
+            android:exported="false" />
+
         <provider
             android:name="com.qq.e.comm.GDTFileProvider"
             android:authorities="com.example.weather.gdt.fileprovider"
@@ -35,42 +39,36 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/gdt_file_path" />
         </provider>
+
         <activity
             android:name=".ADActivity"
             android:exported="false" />
 
         <service
-            android:name=".WeatherService"
+            android:name=".service.WeatherService"
             android:enabled="true"
             android:exported="true" />
 
-
-
         <uses-library
             android:name="org.apache.http.legacy"
-            android:required="false" />
-        <!-- 声明SDK所需要的组件 -->
+            android:required="false" /> <!-- 声明SDK所需要的组件 -->
         <service
             android:name="com.qq.e.comm.DownloadService"
-            android:exported="false" />
-        <!-- 请开发者注意字母的大小写，ADActivity，而不是AdActivity -->
+            android:exported="false" /> <!-- 请开发者注意字母的大小写，ADActivity，而不是AdActivity -->
         <activity
             android:name="com.qq.e.ads.ADActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:multiprocess="true"/>
+            android:multiprocess="true" />
         <activity
             android:name="com.qq.e.ads.PortraitADActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:multiprocess="true"/>
+            android:multiprocess="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.qq.e.ads.LandscapeADActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:screenOrientation="sensorLandscape"
-            android:multiprocess="true"/>
-
-
-
+            android:multiprocess="true"
+            android:screenOrientation="sensorLandscape" />
         <activity
             android:name=".SettingActivity"
             android:exported="false" />
