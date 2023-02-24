@@ -6,23 +6,26 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.content.Context;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.example.weather.citydb.City;
+import com.example.weather.citydb.CityDBHelper;
 import com.example.weather.location.LocationCallback;
 import com.example.weather.location.MyLocationListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -32,7 +35,7 @@ import com.qweather.sdk.view.QWeather;
 
 import java.util.List;
 
-public class CityListActivity extends AppCompatActivity implements LocationCallback{
+public class CityListActivity extends AppCompatActivity implements LocationCallback {
     SharedPreferences last_county;
     public String TAG;
     FloatingActionButton city_list_search;
@@ -67,38 +70,38 @@ public class CityListActivity extends AppCompatActivity implements LocationCallb
     }
 
     private void initLayout() {
-        city_list_search=(FloatingActionButton)findViewById(R.id.city_list_search);
+        city_list_search = (FloatingActionButton) findViewById(R.id.city_list_search);
         city_list_search.setOnClickListener(new View.OnClickListener() {
             //点击查询按钮跳转至搜索城市页面
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(CityListActivity.this,SearchActivity.class);
+                Intent intent = new Intent(CityListActivity.this, SearchActivity.class);
                 startActivity(intent);
                 finish();
             }
         });
-        city_list_back=(ImageButton)findViewById(R.id.city_list_back);
+        city_list_back = (ImageButton) findViewById(R.id.city_list_back);
         city_list_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //点击返回按钮时间，其实这个图片按钮和返回按键是一样的功能
                 //如果是用户第一次打开尚未定位时，在城市列表选择了返回，那么认为用户是想退出软件，以下代码关闭软件
-                if(last_county.getString("id",null)==null)
-                {
+                if (last_county.getString("id", null) == null) {
                     finish();
                 }//若用户在此前已经选择过城市，那么认为用户是不想更改定位，为其返回至主页
                 else {
-                    Intent intent=new Intent(CityListActivity.this,MainActivity.class);
+                    Intent intent = new Intent(CityListActivity.this, MainActivity.class);
                     startActivity(intent);
-                    finish();}
+                    finish();
+                }
             }
         });
-        GPSButton=(ImageButton)findViewById(R.id.city_list_gps) ;
+        GPSButton = (ImageButton) findViewById(R.id.city_list_gps);
         GPSButton.setOnClickListener(new View.OnClickListener() {
             //编辑定位按钮点击事件
             @Override
             public void onClick(View view) {
-                LocationManager lm = (LocationManager)getSystemService(LOCATION_SERVICE);
+                LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
                 if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     Toast.makeText(getApplicationContext(), "请打开GPS", Toast.LENGTH_SHORT).show();
                 } else {
@@ -113,9 +116,14 @@ public class CityListActivity extends AppCompatActivity implements LocationCallb
                             if (Code.OK == geoBean.getCode()) {
                                 List<GeoBean.LocationBean> locationBean = geoBean.getLocationBean();
                                 last_county.edit().putString("id", locationBean.get(0).getId()).commit();
+                                //将定位到的城市id和名字存入数据库
+                                saveCity(new City(locationBean.get(0).getId(), locationBean.get(0).getAdm1() + "," +
+                                        locationBean.get(0).getAdm2() + "市," + locationBean.get(0).getName()));
+
+
                                 Intent intent = new Intent(CityListActivity.this, MainActivity.class);
                                 startActivity(intent);
-                               finish();
+                                finish();
                             }
                         }
                     });
@@ -124,20 +132,38 @@ public class CityListActivity extends AppCompatActivity implements LocationCallb
         });
     }
 
-    public void onBackPressed(){
+    public void saveCity(City city) {
+        CityDBHelper dbHelper = new CityDBHelper(getApplicationContext());
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Cursor cursor = db.rawQuery("select * from city where id=?", new String[]{city.getId()});
+        if (cursor.moveToFirst()) {
+            // 数据库中已经存在该城市，执行更新操作
+            ContentValues values = new ContentValues();
+            values.put("name", city.getName());
+            db.update("city", values, "id=?", new String[]{city.getId()});
+        } else {
+            // 数据库中不存在该城市，执行插入操作
+            ContentValues values = new ContentValues();
+            values.put("id", city.getId());
+            values.put("name", city.getName());
+            db.insert("city", null, values);
+        }
+        cursor.close();
+    }
+
+    public void onBackPressed() {
 
 
         //如果是用户第一次打开尚未定位时，在城市列表选择了返回，那么认为用户是想退出软件，以下代码关闭软件
-        if(last_county.getString("id",null)==null)
-        {
+        if (last_county.getString("id", null) == null) {
             finish();
         }//若用户在此前已经选择过城市，那么认为用户是不想更改定位，为其返回至主页
         else {
-        Intent intent=new Intent(CityListActivity.this,MainActivity.class);
-        startActivity(intent);
-        finish();}
+            Intent intent = new Intent(CityListActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
-
 
 
     //以下是定位相关
@@ -158,6 +184,7 @@ public class CityListActivity extends AppCompatActivity implements LocationCallb
         String street = bdLocation.getStreet();    //获取街道信息
         String locationDescribe = bdLocation.getLocationDescribe();    //获取位置描述信息
     }
+
     private void registerIntent() {
         //请求权限意图
         requestPermissionIntent = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
@@ -174,6 +201,7 @@ public class CityListActivity extends AppCompatActivity implements LocationCallb
             }
         });
     }
+
     //开始定位
     private void startLocation() throws Exception {
         //声明LocationClient类
@@ -193,6 +221,7 @@ public class CityListActivity extends AppCompatActivity implements LocationCallb
         mLocationClient.start();
 
     }
+
     private void initLocation() {//初始化定位
         try {
             mLocationClient = new LocationClient(getApplicationContext());
@@ -212,6 +241,7 @@ public class CityListActivity extends AppCompatActivity implements LocationCallb
             mLocationClient.setLocOption(option);
         }
     }
+
     private void requestPermission() {
         //因为项目的最低版本API是23，所以肯定需要动态请求危险权限，只需要判断权限是否拥有即可
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED

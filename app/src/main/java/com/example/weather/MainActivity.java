@@ -179,17 +179,6 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
-        Intent intent = getIntent();
-        weather_id = intent.getStringExtra("weather_id");//获取传入的id
-
-
-
-        if (weather_id != null) {
-            SharedPreferences.Editor editor = last_county.edit();
-            editor.putString("id", weather_id);
-            editor.commit();
-
-        }
 
         temp_today = (TextView) findViewById(R.id.temp_today);//今日温度文本显示框
         weather_now_textview = (TextView) findViewById(R.id.weather_now);//当前天气显示文本框

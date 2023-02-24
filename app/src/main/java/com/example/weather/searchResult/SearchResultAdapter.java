@@ -1,8 +1,11 @@
 package com.example.weather.searchResult;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +16,8 @@ import android.widget.Toast;
 
 import com.example.weather.MainActivity;
 import com.example.weather.R;
+import com.example.weather.citydb.City;
+import com.example.weather.citydb.CityDBHelper;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,13 +25,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.ViewHolder> {
-
+    private Context mContext;
     private List<SearchCity> cities;
 
 SharedPreferences last_county;
 
-    public SearchResultAdapter(List<SearchCity> cities) {
+    public SearchResultAdapter(Context context,List<SearchCity> cities) {
         this.cities = cities;
+        this.mContext=context;
     }//用于在活动中给适配器赋值
 
     @NonNull
@@ -51,11 +57,16 @@ SharedPreferences last_county;
                 SearchCity searchCity=cities.get(position);
                 Toast.makeText(holder.itemView.getContext(), searchCity.getName(),Toast.LENGTH_SHORT).show();
                 last_county.edit().putString("id",searchCity.getId()).commit();
+
+                //将选中的城市name和id存入数据库
+                saveCity(new City(searchCity.getId(), searchCity.getName()));
+
                 Intent intent=new Intent(view.getContext(), MainActivity.class);
                 view.getContext().startActivity(intent);
 
             }
         });
+
     }
 
     @Override
@@ -78,5 +89,23 @@ SharedPreferences last_county;
             cityView=itemView;
             cityName = itemView.findViewById(R.id.search_city_name);
         }
+    }
+    public void saveCity(City city) {
+        CityDBHelper dbHelper = new CityDBHelper(mContext);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Cursor cursor = db.rawQuery("select * from city where id=?", new String[]{city.getId()});
+        if (cursor.moveToFirst()) {
+            // 数据库中已经存在该城市，执行更新操作
+            ContentValues values = new ContentValues();
+            values.put("name", city.getName());
+            db.update("city", values, "id=?", new String[]{city.getId()});
+        } else {
+            // 数据库中不存在该城市，执行插入操作
+            ContentValues values = new ContentValues();
+            values.put("id", city.getId());
+            values.put("name", city.getName());
+            db.insert("city", null, values);
+        }
+        cursor.close();
     }
 }

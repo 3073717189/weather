@@ -79,7 +79,7 @@ handler.post(new Runnable() {
                                                 ,locationBean.get(i).getId());
                                         searchCities.add(searchCity);
                                     }
-                                    searchResultAdapter = new SearchResultAdapter(searchCities);
+                                    searchResultAdapter = new SearchResultAdapter(getApplicationContext(),searchCities);
                                     recyclerView.setAdapter(searchResultAdapter);
                                 }
                             });
