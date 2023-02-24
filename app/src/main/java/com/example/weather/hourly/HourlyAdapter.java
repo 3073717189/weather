@@ -22,7 +22,6 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.ViewHolder
         this.hourlyList = hourlyList;
     }//用于在活动中给适配器赋值
 
-
     @NonNull
     @Override
     public HourlyAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

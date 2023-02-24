@@ -4,6 +4,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.ContentValues;
@@ -26,6 +28,8 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.example.weather.citydb.City;
 import com.example.weather.citydb.CityDBHelper;
+import com.example.weather.citylist.CityList;
+import com.example.weather.citylist.CityListAdapter;
 import com.example.weather.location.LocationCallback;
 import com.example.weather.location.MyLocationListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -33,6 +37,7 @@ import com.qweather.sdk.bean.base.Code;
 import com.qweather.sdk.bean.geo.GeoBean;
 import com.qweather.sdk.view.QWeather;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CityListActivity extends AppCompatActivity implements LocationCallback {
@@ -130,6 +135,28 @@ public class CityListActivity extends AppCompatActivity implements LocationCallb
                 }
             }
         });
+        CityDBHelper dbHelper = new CityDBHelper(getApplicationContext());
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String[] projection = {"id", "name"};
+        String sortOrder = "name ASC";
+        Cursor cursor = db.query("city", projection, null, null, null, null, sortOrder);
+
+        List<CityList> cityLists = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            String id = cursor.getString(cursor.getColumnIndexOrThrow("id"));
+            String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+            CityList city = new CityList(name,id);
+            cityLists.add(city);
+        }
+        cursor.close();
+
+        LinearLayoutManager cityLinearLayoutManager=new LinearLayoutManager(getApplicationContext());
+        CityListAdapter adapter = new CityListAdapter(cityLists,getApplicationContext());
+        RecyclerView city_rv;
+        city_rv=findViewById(R.id.city_list_rv);
+        city_rv.setLayoutManager(cityLinearLayoutManager);
+        city_rv.setAdapter(adapter);
+
     }
 
     public void saveCity(City city) {
