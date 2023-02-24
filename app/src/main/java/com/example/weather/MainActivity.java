@@ -2,6 +2,8 @@ package com.example.weather;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
@@ -21,6 +23,8 @@ import android.widget.Toast;
 import com.baidu.location.LocationClient;
 import com.example.weather.forecast.Forecast;
 import com.example.weather.forecast.ForecastAdapter;
+import com.example.weather.hourly.Hourly;
+import com.example.weather.hourly.HourlyAdapter;
 import com.example.weather.service.WeatherService;
 import com.google.gson.Gson;
 import com.qweather.sdk.bean.IndicesBean;
@@ -31,6 +35,7 @@ import com.qweather.sdk.bean.base.Lang;
 import com.qweather.sdk.bean.base.Unit;
 import com.qweather.sdk.bean.geo.GeoBean;
 import com.qweather.sdk.bean.weather.WeatherDailyBean;
+import com.qweather.sdk.bean.weather.WeatherHourlyBean;
 import com.qweather.sdk.bean.weather.WeatherNowBean;
 import com.qweather.sdk.view.HeConfig;
 import com.qweather.sdk.view.QWeather;
@@ -42,6 +47,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private RecyclerView recyclerView_hourly;//初始化逐小时显示天气的rv
+    private HourlyAdapter hourlyAdapter;//上述rv的适配器
     // 以下是夜间模式相关
     SharedPreferences night_mode;
     int start, now, end;
@@ -83,22 +90,25 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        HeConfig.init("HE2301031356041355", "210e7e865a58471ca4dee69484f722ff");//初始化key
+        HeConfig.switchToDevService();//切换为免费版
+
+
 //设置透明状态栏，对应xml文件中添加属性android:fitsSystemWindows="true"
         Window window = getWindow();
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE |View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         window.setStatusBarColor(Color.TRANSPARENT);
 
 
-     //   Intent update_intent=new Intent(this,AutoUpdateService.class);
-     //   startService(update_intent);
-      //  weather_today = getSharedPreferences("weather_today", MODE_PRIVATE);//存储今日天气部分数据，尝试在通知栏展示
         view_state = getSharedPreferences("view_state", MODE_PRIVATE);//读取控件显示状态，初始化控件
 
         if(view_state.getBoolean("service_state",false)){
             Intent service_intent = new Intent(this, WeatherService.class);
             startService(service_intent);}//启动通知栏服务
-
+        InitRecyclerView();//初始化逐小时显示天气的rv
         InitLayout();
+
         night_mode = getSharedPreferences("night_mode", MODE_PRIVATE);//获取夜间模式相关状态信息
         start = night_mode.getInt("start_hour", 0) * 60 + night_mode.getInt("start_minute", 0);
         end = night_mode.getInt("end_hour", 0) * 60 + night_mode.getInt("end_minute", 0);
@@ -206,8 +216,7 @@ public class MainActivity extends AppCompatActivity {
         county_name = (TextView) findViewById(R.id.county_name);//城市名称显示文本框
 
 
-        HeConfig.init("HE2301031356041355", "210e7e865a58471ca4dee69484f722ff");//初始化key
-        HeConfig.switchToDevService();//切换为免费版
+
         QWeather.getWeatherNow(MainActivity.this, last_county.getString("id", null),
                 Lang.ZH_HANS, Unit.METRIC, new QWeather.OnResultWeatherNowListener() {
                     @Override
@@ -376,7 +385,53 @@ public class MainActivity extends AppCompatActivity {
             life.setVisibility(View.GONE);
         if (!view_state.getBoolean("other_state", true))
             other.setVisibility(View.GONE);
+
+    }
+private void InitRecyclerView(){
+        //初始化逐小时显示天气的rv
+    recyclerView_hourly=findViewById(R.id.rv_hourly);
+    LinearLayoutManager hourlyLinearLayoutManager=new LinearLayoutManager(this);
+    hourlyLinearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);//布局朝向为水平
+    recyclerView_hourly.setLayoutManager(hourlyLinearLayoutManager);
+    last_county = getSharedPreferences("last_county", MODE_PRIVATE);//获取存储的城市id
+QWeather.getWeather24Hourly(getApplicationContext(),
+        last_county.getString("id", null), new QWeather.OnResultWeatherHourlyListener() {
+    @Override
+    public void onError(Throwable e) {
+        Log.i(TAG, "getWeather onError: " + e);
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(),"逐小时数据获取失败"+e,Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
+    @Override
+    public void onSuccess(WeatherHourlyBean weatherHourlyBean) {
+        if(Code.OK==weatherHourlyBean.getCode()){
+            List<WeatherHourlyBean.HourlyBean> hourlyDate=weatherHourlyBean.getHourly();
+            List<Hourly>hourlyList=new ArrayList<>();
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    int i;
+                    for(i=0;i<hourlyDate.size();i++){
+                        Hourly hourly=new Hourly(hourlyDate.get(i).getTemp()+"℃",hourlyDate.get(i).getText(),
+                                hourlyDate.get(i).getWindScale()+"级",hourlyDate.get(i).getFxTime());
+                        hourlyList.add(hourly);
+
+                    }
+                    hourlyAdapter=new HourlyAdapter(hourlyList);
+                    hourlyAdapter.notifyDataSetChanged();
+
+                    recyclerView_hourly.setAdapter(hourlyAdapter);
+                }
+            });
+        }
+
+    }
+});
+}
 
 }

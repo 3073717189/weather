@@ -27,17 +27,18 @@ SharedPreferences last_county;
 
     public SearchResultAdapter(List<SearchCity> cities) {
         this.cities = cities;
-    }
+    }//用于在活动中给适配器赋值
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_result_item, parent, false);
         return new ViewHolder(view);
-    }
+    }//绑定该rv对应的item
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        //在这里对rv中的控件进行操作以及设计点击事件
         SearchCity searchCity = cities.get(position);
         holder.cityName.setText(searchCity.getName());
 
@@ -68,10 +69,11 @@ SharedPreferences last_county;
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         View cityView;
-
         TextView cityName;
+        //以上控件将会在onBindViewHolder方法中使用并设置相应的显示内容或者点击事件
 
         public ViewHolder(@NonNull View itemView) {
+            //这里将rv中的每个控件绑定到对应的item的xml文件中设置的id
             super(itemView);
             cityView=itemView;
             cityName = itemView.findViewById(R.id.search_city_name);

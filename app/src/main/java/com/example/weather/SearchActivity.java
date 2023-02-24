@@ -83,8 +83,6 @@ handler.post(new Runnable() {
                                     recyclerView.setAdapter(searchResultAdapter);
                                 }
                             });
-
-
                         }
                     }
                 });
