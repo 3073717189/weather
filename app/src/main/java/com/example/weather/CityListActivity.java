@@ -16,6 +16,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -41,6 +43,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CityListActivity extends AppCompatActivity implements LocationCallback {
+
+    public static final int MSG_FINISH_ACTIVITY = 1;
+
     SharedPreferences last_county;
     public String TAG;
     FloatingActionButton city_list_search;
@@ -73,6 +78,19 @@ public class CityListActivity extends AppCompatActivity implements LocationCallb
         initLayout();
 
     }
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_FINISH_ACTIVITY:
+                    finish();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     private void initLayout() {
         city_list_search = (FloatingActionButton) findViewById(R.id.city_list_search);
@@ -151,10 +169,11 @@ public class CityListActivity extends AppCompatActivity implements LocationCallb
         cursor.close();
 
         LinearLayoutManager cityLinearLayoutManager=new LinearLayoutManager(getApplicationContext());
-        CityListAdapter adapter = new CityListAdapter(cityLists,getApplicationContext());
+
         RecyclerView city_rv;
         city_rv=findViewById(R.id.city_list_rv);
         city_rv.setLayoutManager(cityLinearLayoutManager);
+        CityListAdapter adapter = new CityListAdapter(cityLists,getApplicationContext(),mHandler);
         city_rv.setAdapter(adapter);
 
     }
