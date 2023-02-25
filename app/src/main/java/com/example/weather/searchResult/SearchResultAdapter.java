@@ -1,8 +1,14 @@
 package com.example.weather.searchResult;
 
+import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +17,11 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.weather.CityListActivity;
 import com.example.weather.MainActivity;
 import com.example.weather.R;
+import com.example.weather.citydb.City;
+import com.example.weather.citydb.CityDBHelper;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,13 +29,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.ViewHolder> {
-
+    private Context mContext;
     private List<SearchCity> cities;
-
+    final Handler handler = new Handler();
 SharedPreferences last_county;
-
-    public SearchResultAdapter(List<SearchCity> cities) {
+    private Handler mHandler;
+    public SearchResultAdapter(Context context,List<SearchCity> cities,Handler handler) {
         this.cities = cities;
+        this.mContext=context;
+        this.mHandler=handler;
     }//用于在活动中给适配器赋值
 
     @NonNull
@@ -49,13 +60,25 @@ SharedPreferences last_county;
             public void onClick(View view) {
                 int position=holder.getAdapterPosition();
                 SearchCity searchCity=cities.get(position);
-                Toast.makeText(holder.itemView.getContext(), searchCity.getName(),Toast.LENGTH_SHORT).show();
                 last_county.edit().putString("id",searchCity.getId()).commit();
-                Intent intent=new Intent(view.getContext(), MainActivity.class);
-                view.getContext().startActivity(intent);
+
+                //将选中的城市name和id存入数据库
+                saveCity(new City(searchCity.getId(), searchCity.getName()));
+handler.post(new Runnable() {
+    @Override
+    public void run() {
+        Intent intent=new Intent(view.getContext(), MainActivity.class);
+        view.getContext().startActivity(intent);
+        Message msg = mHandler.obtainMessage();
+        msg.what = CityListActivity.MSG_FINISH_ACTIVITY;
+        mHandler.sendMessage(msg);
+        // 当用户点击列表项跳转到另一个活动时，Handler会在UI线程中接收到消息，然后在处理消息的函数中执行销毁活动的操作，避免出现黑屏
+    }
+});
 
             }
         });
+
     }
 
     @Override
@@ -78,5 +101,23 @@ SharedPreferences last_county;
             cityView=itemView;
             cityName = itemView.findViewById(R.id.search_city_name);
         }
+    }
+    public void saveCity(City city) {
+        CityDBHelper dbHelper = new CityDBHelper(mContext);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Cursor cursor = db.rawQuery("select * from city where id=?", new String[]{city.getId()});
+        if (cursor.moveToFirst()) {
+            // 数据库中已经存在该城市，执行更新操作
+            ContentValues values = new ContentValues();
+            values.put("name", city.getName());
+            db.update("city", values, "id=?", new String[]{city.getId()});
+        } else {
+            // 数据库中不存在该城市，执行插入操作
+            ContentValues values = new ContentValues();
+            values.put("id", city.getId());
+            values.put("name", city.getName());
+            db.insert("city", null, values);
+        }
+        cursor.close();
     }
 }

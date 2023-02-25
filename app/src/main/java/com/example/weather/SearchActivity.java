@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -34,6 +35,7 @@ public class SearchActivity extends AppCompatActivity {
     EditText search_edit;
     SharedPreferences last_county;
     final Handler handler = new Handler();
+    public static final int MSG_FINISH_ACTIVITY = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +81,7 @@ handler.post(new Runnable() {
                                                 ,locationBean.get(i).getId());
                                         searchCities.add(searchCity);
                                     }
-                                    searchResultAdapter = new SearchResultAdapter(searchCities);
+                                    searchResultAdapter = new SearchResultAdapter(getApplicationContext(),searchCities,mHandler);
                                     recyclerView.setAdapter(searchResultAdapter);
                                 }
                             });
@@ -89,6 +91,18 @@ handler.post(new Runnable() {
             }
         });
     }
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_FINISH_ACTIVITY:
+                    finish();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
     public void onBackPressed(){
         last_county = getSharedPreferences("last_county", MODE_PRIVATE);
 
