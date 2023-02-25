@@ -8,6 +8,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,12 +17,18 @@ import android.util.Log;
 
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.location.LocationClient;
+import com.example.weather.citydb.CityDBHelper;
+import com.example.weather.citylist.CityList;
 import com.example.weather.forecast.Forecast;
 import com.example.weather.forecast.ForecastAdapter;
 import com.example.weather.hourly.Hourly;
@@ -77,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView spt, cw, drsg, comf;//生活建议
 
     MyListView listView;
-    String weather_id;
     private TextView county_name;
     SharedPreferences last_county;
     final Handler handler = new Handler();
@@ -97,15 +104,16 @@ public class MainActivity extends AppCompatActivity {
 
 //设置透明状态栏，对应xml文件中添加属性android:fitsSystemWindows="true"
         Window window = getWindow();
-        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE |View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         window.setStatusBarColor(Color.TRANSPARENT);
 
 
         view_state = getSharedPreferences("view_state", MODE_PRIVATE);//读取控件显示状态，初始化控件
 
-        if(view_state.getBoolean("service_state",false)){
+        if (view_state.getBoolean("service_state", false)) {
             Intent service_intent = new Intent(this, WeatherService.class);
-            startService(service_intent);}//启动通知栏服务
+            startService(service_intent);
+        }//启动通知栏服务
         InitRecyclerView();//初始化逐小时显示天气的rv
         InitLayout();
 
@@ -172,9 +180,8 @@ public class MainActivity extends AppCompatActivity {
         last_county = getSharedPreferences("last_county", MODE_PRIVATE);
 
         //初始化，如果用户第一次打开尚未定位，会启用以下代码跳转至选择城市页面
-        if(last_county.getString("id",null)==null)
-        {
-            Intent intent_init=new Intent(MainActivity.this,CityListActivity.class);
+        if (last_county.getString("id", null) == null) {
+            Intent intent_init = new Intent(MainActivity.this, CityListActivity.class);
             startActivity(intent_init);
             finish();
         }
@@ -203,7 +210,70 @@ public class MainActivity extends AppCompatActivity {
         comf = (TextView) findViewById(R.id.comf);//生活建议相关显示框
 
         county_name = (TextView) findViewById(R.id.county_name);//城市名称显示文本框
+        county_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                List<String> cityList;
+
+//遍历数据库，将存储的城市展示在下拉框菜单中
+                CityDBHelper dbHelper = new CityDBHelper(getApplicationContext());
+                SQLiteDatabase db = dbHelper.getReadableDatabase();
+                String[] projection = {"id", "name"};
+                String sortOrder = "name ASC";
+                Cursor cursor = db.query("city", projection, null, null, null, null, sortOrder);
+                cityList = new ArrayList<>();
+                cityList.add("请选择城市");
+                while (cursor.moveToNext()) {
+                    String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+                    cityList.add(name);
+                }
+                cursor.close();
+                // 在Activity或Fragment中获取Spinner对象
+                Spinner citySpinner = findViewById(R.id.city_spinner);
+                citySpinner.setSelection(0);
+                citySpinner.performClick();
+
+
+// 创建ArrayAdapter对象，用于将数据源绑定到Spinner上
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, cityList);
+
+// 设置下拉列表的样式
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+// 将adapter添加到spinner中
+                citySpinner.setAdapter(adapter);
+
+
+// 给Spinner设置选择监听器
+                citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        // 获取选中的城市
+                        String selectedCity = (String) parent.getItemAtPosition(position);
+                        if (selectedCity.equals("请选择城市")) {
+                            // 如果选中了提示文本，则不做任何处理
+                            return;
+                        }
+                        // 查询对应城市的id
+                        String countyId = dbHelper.queryCountyId(selectedCity);
+                        dbHelper.close();
+                        // TODO: 处理选中城市的逻辑
+                        last_county.edit().putString("id", countyId).commit();
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // 未选择任何项
+
+                    }
+                });
+
+            }
+        });
 
 
         QWeather.getWeatherNow(MainActivity.this, last_county.getString("id", null),
@@ -304,26 +374,26 @@ public class MainActivity extends AppCompatActivity {
         QWeather.getAirNow(MainActivity.this, last_county.getString("id", null),
                 Lang.ZH_HANS, new QWeather.OnResultAirNowListener() {
 
-            @Override
-            public void onError(Throwable e) {
-                Log.i(TAG, "getWeather onError: " + e);
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i(TAG, "getWeather onError: " + e);
+                    }
 
-            @Override
-            public void onSuccess(AirNowBean airNowBean) {
-                if (Code.OK == airNowBean.getCode()) {
-                    AirNowBean.NowBean now = airNowBean.getNow();
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            aqi_primary.setText("主要污染:" + now.getPrimary());
-                            aqi_category.setText("空气质量" + now.getCategory() + " " + now.getAqi());
-                            aqi_pm2p5.setText("pm2.5:" + now.getPm2p5());
+                    @Override
+                    public void onSuccess(AirNowBean airNowBean) {
+                        if (Code.OK == airNowBean.getCode()) {
+                            AirNowBean.NowBean now = airNowBean.getNow();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    aqi_primary.setText("主要污染:" + now.getPrimary());
+                                    aqi_category.setText("空气质量" + now.getCategory() + " " + now.getAqi());
+                                    aqi_pm2p5.setText("pm2.5:" + now.getPm2p5());
+                                }
+                            });
                         }
-                    });
-                }
-            }
-        });
+                    }
+                });
 
         //生活指数相关
         ArrayList<IndicesType> life = new ArrayList<>();
@@ -334,27 +404,27 @@ public class MainActivity extends AppCompatActivity {
 
         QWeather.getIndices1D(MainActivity.this, last_county.getString("id", null),
                 Lang.ZH_HANS, life, new QWeather.OnResultIndicesListener() {
-            @Override
-            public void onError(Throwable e) {
-                Log.i(TAG, "getWeather onError: " + e);
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i(TAG, "getWeather onError: " + e);
+                    }
 
-            @Override
-            public void onSuccess(IndicesBean indicesBean) {
-                if (Code.OK == indicesBean.getCode()) {
-                    List<IndicesBean.DailyBean> life = indicesBean.getDailyList();
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            spt.setText("运动建议：" + life.get(0).getText());
-                            cw.setText("洗车建议：" + life.get(1).getText());
-                            drsg.setText("穿衣建议：" + life.get(2).getText());
-                            comf.setText("舒适度：" + life.get(3).getText());
+                    @Override
+                    public void onSuccess(IndicesBean indicesBean) {
+                        if (Code.OK == indicesBean.getCode()) {
+                            List<IndicesBean.DailyBean> life = indicesBean.getDailyList();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    spt.setText("运动建议：" + life.get(0).getText());
+                                    cw.setText("洗车建议：" + life.get(1).getText());
+                                    drsg.setText("穿衣建议：" + life.get(2).getText());
+                                    comf.setText("舒适度：" + life.get(3).getText());
+                                }
+                            });
                         }
-                    });
-                }
-            }
-        });
+                    }
+                });
 
     }
 
@@ -364,7 +434,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout wind = (LinearLayout) findViewById(R.id.wind);
         LinearLayout life = (LinearLayout) findViewById(R.id.life);
         LinearLayout other = (LinearLayout) findViewById(R.id.other);
-        LinearLayout hourly=(LinearLayout) findViewById(R.id.hourly);
+        LinearLayout hourly = (LinearLayout) findViewById(R.id.hourly);
         if (!view_state.getBoolean("air_state", true))
             air.setVisibility(View.GONE);
         if (!view_state.getBoolean("forecast_state", true))
@@ -378,51 +448,52 @@ public class MainActivity extends AppCompatActivity {
         if (!view_state.getBoolean("hourly_state", true))
             hourly.setVisibility(View.GONE);
     }
-private void InitRecyclerView(){
+
+    private void InitRecyclerView() {
         //初始化逐小时显示天气的rv
-    recyclerView_hourly=findViewById(R.id.rv_hourly);
-    LinearLayoutManager hourlyLinearLayoutManager=new LinearLayoutManager(this);
-    hourlyLinearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);//布局朝向为水平
-    recyclerView_hourly.setLayoutManager(hourlyLinearLayoutManager);
-    last_county = getSharedPreferences("last_county", MODE_PRIVATE);//获取存储的城市id
-QWeather.getWeather24Hourly(getApplicationContext(),
-        last_county.getString("id", null), new QWeather.OnResultWeatherHourlyListener() {
-    @Override
-    public void onError(Throwable e) {
-        Log.i(TAG, "getWeather onError: " + e);
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(),"逐小时数据获取失败"+e,Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    @Override
-    public void onSuccess(WeatherHourlyBean weatherHourlyBean) {
-        if(Code.OK==weatherHourlyBean.getCode()){
-            List<WeatherHourlyBean.HourlyBean> hourlyDate=weatherHourlyBean.getHourly();
-            List<Hourly>hourlyList=new ArrayList<>();
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    int i;
-                    for(i=0;i<hourlyDate.size();i++){
-                        Hourly hourly=new Hourly(hourlyDate.get(i).getTemp()+"℃",hourlyDate.get(i).getText(),
-                                hourlyDate.get(i).getWindScale()+"级",hourlyDate.get(i).getFxTime().substring(11,16));
-                        //上述的getFxTime返回的数据过长，只截取第12-16的内容，其中包含逐小时预报天气的小时和分钟信息
-                        hourlyList.add(hourly);
+        recyclerView_hourly = findViewById(R.id.rv_hourly);
+        LinearLayoutManager hourlyLinearLayoutManager = new LinearLayoutManager(this);
+        hourlyLinearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);//布局朝向为水平
+        recyclerView_hourly.setLayoutManager(hourlyLinearLayoutManager);
+        last_county = getSharedPreferences("last_county", MODE_PRIVATE);//获取存储的城市id
+        QWeather.getWeather24Hourly(getApplicationContext(),
+                last_county.getString("id", null), new QWeather.OnResultWeatherHourlyListener() {
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i(TAG, "getWeather onError: " + e);
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), "逐小时数据获取失败" + e, Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
-                    hourlyAdapter=new HourlyAdapter(hourlyList);
-                    hourlyAdapter.notifyDataSetChanged();
 
-                    recyclerView_hourly.setAdapter(hourlyAdapter);
-                }
-            });
-        }
+                    @Override
+                    public void onSuccess(WeatherHourlyBean weatherHourlyBean) {
+                        if (Code.OK == weatherHourlyBean.getCode()) {
+                            List<WeatherHourlyBean.HourlyBean> hourlyDate = weatherHourlyBean.getHourly();
+                            List<Hourly> hourlyList = new ArrayList<>();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    int i;
+                                    for (i = 0; i < hourlyDate.size(); i++) {
+                                        Hourly hourly = new Hourly(hourlyDate.get(i).getTemp() + "℃", hourlyDate.get(i).getText(),
+                                                hourlyDate.get(i).getWindScale() + "级", hourlyDate.get(i).getFxTime().substring(11, 16));
+                                        //上述的getFxTime返回的数据过长，只截取第12-16的内容，其中包含逐小时预报天气的小时和分钟信息
+                                        hourlyList.add(hourly);
+                                    }
+                                    hourlyAdapter = new HourlyAdapter(hourlyList);
+                                    hourlyAdapter.notifyDataSetChanged();
 
+                                    recyclerView_hourly.setAdapter(hourlyAdapter);
+                                }
+                            });
+                        }
+
+                    }
+                });
     }
-});
-}
 
 }
