@@ -97,62 +97,33 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         HeConfig.init("HE2301031356041355", "210e7e865a58471ca4dee69484f722ff");//初始化key
         HeConfig.switchToDevService();//切换为免费版
 
-
-//设置透明状态栏，对应xml文件中添加属性android:fitsSystemWindows="true"
-        Window window = getWindow();
-        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        window.setStatusBarColor(Color.TRANSPARENT);
-
-
         view_state = getSharedPreferences("view_state", MODE_PRIVATE);//读取控件显示状态，初始化控件
+        last_county = getSharedPreferences("last_county", MODE_PRIVATE);
 
         if (view_state.getBoolean("service_state", false)) {
             Intent service_intent = new Intent(this, WeatherService.class);
             startService(service_intent);
         }//启动通知栏服务
-        InitRecyclerView();//初始化逐小时显示天气的rv
-        InitLayout();
-
-        night_mode = getSharedPreferences("night_mode", MODE_PRIVATE);//获取夜间模式相关状态信息
-        start = night_mode.getInt("start_hour", 0) * 60 + night_mode.getInt("start_minute", 0);
-        end = night_mode.getInt("end_hour", 0) * 60 + night_mode.getInt("end_minute", 0);
-        Calendar calendar = Calendar.getInstance();
-        now = calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.
-                get(Calendar.MINUTE);//将夜间模式起始时间，当前时间，结束时间的值转换，比较大小
-        if (night_mode.getBoolean("switch_time", false)) {//检测夜间模式定时开关状态
-            if ((start <= now && now < end) || (end < start && start <= now) || (now < end && end < start)) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);//启用夜间模式
-                night_mode.edit().putBoolean("switch_mode", true).commit();//将夜间模式开关状态记录为开启
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);//关闭夜间模式
-                night_mode.edit().putBoolean("switch_mode", false).commit();////将夜间模式开关状态记录为关闭
-            }
-        }
-        if (night_mode.getBoolean("switch_mode", false)) {//检测夜间模式开关状态
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);//启用夜间模式
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);//关闭夜间模式
-        }
-
+        GetData();//从网络获取数据更新视图
+        InitLayout();//初始化布局
 
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.refresh);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {//下拉刷新重载页面
             @Override
             public void onRefresh() {
+                // 显示下拉刷新动画
+                swipeRefresh.setRefreshing(true);
                 Toast.makeText(getApplicationContext(), "刷新中", Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-                finish();
+                // 获取数据
+               GetData();
+                swipeRefresh.setRefreshing(false);
+                Toast.makeText(getApplicationContext(), "刷新完成！", Toast.LENGTH_SHORT).show();
             }
         });
 
-        listView = findViewById(R.id.forecast_lv);
-        button_city_list = (ImageButton) findViewById(R.id.city_list);
         button_setting = (ImageButton) findViewById(R.id.setting);
         button_setting.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        button_city_list = (ImageButton) findViewById(R.id.city_list);
         button_city_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -176,9 +148,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        last_county = getSharedPreferences("last_county", MODE_PRIVATE);
-
         //初始化，如果用户第一次打开尚未定位，会启用以下代码跳转至选择城市页面
         if (last_county.getString("id", null) == null) {
             Intent intent_init = new Intent(MainActivity.this, CityListActivity.class);
@@ -186,36 +155,11 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
-
-        temp_today = (TextView) findViewById(R.id.temp_today);//今日温度文本显示框
-        weather_now_textview = (TextView) findViewById(R.id.weather_now);//当前天气显示文本框
-        temp_now_textview = (TextView) findViewById(R.id.temperature_now);//当前温度显示文本框
-        winddir_now_textview = (TextView) findViewById(R.id.winddir_now);//当前风向文本显示框
-        windscale_now_textview = (TextView) findViewById(R.id.windscale_now);//当前风力等级显示文本框
-        windspeed_now_textview = (TextView) findViewById(R.id.windspeed_now);//当前风速显示文本框
-        humidity_now_textview = (TextView) findViewById(R.id.humidity_now);//相对湿度显示文本框
-        precip_now_textview = (TextView) findViewById(R.id.precip_now);//降水量显示文本框
-        pressure_now_textview = (TextView) findViewById(R.id.pressure_now);//大气压强显示文本框
-        vis_now_textview = (TextView) findViewById(R.id.vis_now);//能见度显示文本框
-        dew_now_textview = (TextView) findViewById(R.id.dew_now);//当前云量显示文本框
-
-
-        aqi_primary = (TextView) findViewById(R.id.aqi_primary);
-        aqi_category = (TextView) findViewById(R.id.aqi_category);
-        aqi_pm2p5 = (TextView) findViewById(R.id.aqi_pm2_5);//空气质量相关显示框
-
-        spt = (TextView) findViewById(R.id.spt);
-        cw = (TextView) findViewById(R.id.cw);
-        drsg = (TextView) findViewById(R.id.drsg);
-        comf = (TextView) findViewById(R.id.comf);//生活建议相关显示框
-
         county_name = (TextView) findViewById(R.id.county_name);//城市名称显示文本框
         county_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 List<String> cityList;
-
 //遍历数据库，将存储的城市展示在下拉框菜单中
                 CityDBHelper dbHelper = new CityDBHelper(getApplicationContext());
                 SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -233,8 +177,6 @@ public class MainActivity extends AppCompatActivity {
                 Spinner citySpinner = findViewById(R.id.city_spinner);
                 citySpinner.setSelection(0);
                 citySpinner.performClick();
-
-
 // 创建ArrayAdapter对象，用于将数据源绑定到Spinner上
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, cityList);
 
@@ -243,8 +185,6 @@ public class MainActivity extends AppCompatActivity {
 
 // 将adapter添加到spinner中
                 citySpinner.setAdapter(adapter);
-
-
 // 给Spinner设置选择监听器
                 citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -268,14 +208,128 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {
                         // 未选择任何项
-
                     }
                 });
 
             }
         });
+    }
+    private void InitLayout() {
+        //设置透明状态栏，对应xml文件中添加属性android:fitsSystemWindows="true"
+        Window window = getWindow();
+        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        window.setStatusBarColor(Color.TRANSPARENT);
+        listView = findViewById(R.id.forecast_lv);
+        temp_today = (TextView) findViewById(R.id.temp_today);//今日温度文本显示框
+        weather_now_textview = (TextView) findViewById(R.id.weather_now);//当前天气显示文本框
+        temp_now_textview = (TextView) findViewById(R.id.temperature_now);//当前温度显示文本框
+        winddir_now_textview = (TextView) findViewById(R.id.winddir_now);//当前风向文本显示框
+        windscale_now_textview = (TextView) findViewById(R.id.windscale_now);//当前风力等级显示文本框
+        windspeed_now_textview = (TextView) findViewById(R.id.windspeed_now);//当前风速显示文本框
+        humidity_now_textview = (TextView) findViewById(R.id.humidity_now);//相对湿度显示文本框
+        precip_now_textview = (TextView) findViewById(R.id.precip_now);//降水量显示文本框
+        pressure_now_textview = (TextView) findViewById(R.id.pressure_now);//大气压强显示文本框
+        vis_now_textview = (TextView) findViewById(R.id.vis_now);//能见度显示文本框
+        dew_now_textview = (TextView) findViewById(R.id.dew_now);//当前云量显示文本框
 
 
+        aqi_primary = (TextView) findViewById(R.id.aqi_primary);
+        aqi_category = (TextView) findViewById(R.id.aqi_category);
+        aqi_pm2p5 = (TextView) findViewById(R.id.aqi_pm2_5);//空气质量相关显示框
+
+        spt = (TextView) findViewById(R.id.spt);
+        cw = (TextView) findViewById(R.id.cw);
+        drsg = (TextView) findViewById(R.id.drsg);
+        comf = (TextView) findViewById(R.id.comf);//生活建议相关显示框
+
+        LinearLayout air = (LinearLayout) findViewById(R.id.air);
+        LinearLayout forecast = (LinearLayout) findViewById(R.id.forecast);
+        LinearLayout wind = (LinearLayout) findViewById(R.id.wind);
+        LinearLayout life = (LinearLayout) findViewById(R.id.life);
+        LinearLayout other = (LinearLayout) findViewById(R.id.other);
+        LinearLayout hourly = (LinearLayout) findViewById(R.id.hourly);
+        if (!view_state.getBoolean("air_state", true))
+            air.setVisibility(View.GONE);
+        if (!view_state.getBoolean("forecast_state", true))
+            forecast.setVisibility(View.GONE);
+        if (!view_state.getBoolean("wind_state", true))
+            wind.setVisibility(View.GONE);
+        if (!view_state.getBoolean("life_state", true))
+            life.setVisibility(View.GONE);
+        if (!view_state.getBoolean("other_state", true))
+            other.setVisibility(View.GONE);
+        if (!view_state.getBoolean("hourly_state", true))
+            hourly.setVisibility(View.GONE);
+
+        night_mode = getSharedPreferences("night_mode", MODE_PRIVATE);//获取夜间模式相关状态信息
+        start = night_mode.getInt("start_hour", 0) * 60 + night_mode.getInt("start_minute", 0);
+        end = night_mode.getInt("end_hour", 0) * 60 + night_mode.getInt("end_minute", 0);
+        Calendar calendar = Calendar.getInstance();
+        now = calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.
+                get(Calendar.MINUTE);//将夜间模式起始时间，当前时间，结束时间的值转换，比较大小
+        if (night_mode.getBoolean("switch_time", false)) {//检测夜间模式定时开关状态
+            if ((start <= now && now < end) || (end < start && start <= now) || (now < end && end < start)) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);//启用夜间模式
+                night_mode.edit().putBoolean("switch_mode", true).commit();//将夜间模式开关状态记录为开启
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);//关闭夜间模式
+                night_mode.edit().putBoolean("switch_mode", false).commit();////将夜间模式开关状态记录为关闭
+            }
+        }
+        if (night_mode.getBoolean("switch_mode", false)) {//检测夜间模式开关状态
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);//启用夜间模式
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);//关闭夜间模式
+        }
+
+
+    }
+
+    private void GetData() {
+        //初始化逐小时显示天气的rv
+        recyclerView_hourly = findViewById(R.id.rv_hourly);
+        LinearLayoutManager hourlyLinearLayoutManager = new LinearLayoutManager(this);
+        hourlyLinearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);//布局朝向为水平
+        recyclerView_hourly.setLayoutManager(hourlyLinearLayoutManager);
+        last_county = getSharedPreferences("last_county", MODE_PRIVATE);//获取存储的城市id
+        QWeather.getWeather24Hourly(getApplicationContext(),
+                last_county.getString("id", null), new QWeather.OnResultWeatherHourlyListener() {
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i(TAG, "getWeather onError: " + e);
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), "逐小时数据获取失败" + e, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onSuccess(WeatherHourlyBean weatherHourlyBean) {
+                        if (Code.OK == weatherHourlyBean.getCode()) {
+                            List<WeatherHourlyBean.HourlyBean> hourlyDate = weatherHourlyBean.getHourly();
+                            List<Hourly> hourlyList = new ArrayList<>();
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    int i;
+                                    for (i = 0; i < hourlyDate.size(); i++) {
+                                        Hourly hourly = new Hourly(hourlyDate.get(i).getTemp() + "℃", hourlyDate.get(i).getText(),
+                                                hourlyDate.get(i).getWindScale() + "级", hourlyDate.get(i).getFxTime().substring(11, 16));
+                                        //上述的getFxTime返回的数据过长，只截取第12-16的内容，其中包含逐小时预报天气的小时和分钟信息
+                                        hourlyList.add(hourly);
+                                    }
+                                    hourlyAdapter = new HourlyAdapter(hourlyList);
+                                    hourlyAdapter.notifyDataSetChanged();
+
+                                    recyclerView_hourly.setAdapter(hourlyAdapter);
+                                }
+                            });
+                        }
+
+                    }
+                });
         QWeather.getWeatherNow(MainActivity.this, last_county.getString("id", null),
                 Lang.ZH_HANS, Unit.METRIC, new QWeather.OnResultWeatherNowListener() {
                     @Override
@@ -325,6 +379,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(GeoBean geoBean) {
                         if (Code.OK == geoBean.getCode()) {
+                            Calendar calendar = Calendar.getInstance();
                             List<GeoBean.LocationBean> locationBean = geoBean.getLocationBean();
                             handler.post((new Runnable() {      //通过城市id确定城市名字并将城市名称文本显示框更新
                                 @Override
@@ -426,74 +481,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-    }
-
-    private void InitLayout() {
-        LinearLayout air = (LinearLayout) findViewById(R.id.air);
-        LinearLayout forecast = (LinearLayout) findViewById(R.id.forecast);
-        LinearLayout wind = (LinearLayout) findViewById(R.id.wind);
-        LinearLayout life = (LinearLayout) findViewById(R.id.life);
-        LinearLayout other = (LinearLayout) findViewById(R.id.other);
-        LinearLayout hourly = (LinearLayout) findViewById(R.id.hourly);
-        if (!view_state.getBoolean("air_state", true))
-            air.setVisibility(View.GONE);
-        if (!view_state.getBoolean("forecast_state", true))
-            forecast.setVisibility(View.GONE);
-        if (!view_state.getBoolean("wind_state", true))
-            wind.setVisibility(View.GONE);
-        if (!view_state.getBoolean("life_state", true))
-            life.setVisibility(View.GONE);
-        if (!view_state.getBoolean("other_state", true))
-            other.setVisibility(View.GONE);
-        if (!view_state.getBoolean("hourly_state", true))
-            hourly.setVisibility(View.GONE);
-    }
-
-    private void InitRecyclerView() {
-        //初始化逐小时显示天气的rv
-        recyclerView_hourly = findViewById(R.id.rv_hourly);
-        LinearLayoutManager hourlyLinearLayoutManager = new LinearLayoutManager(this);
-        hourlyLinearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);//布局朝向为水平
-        recyclerView_hourly.setLayoutManager(hourlyLinearLayoutManager);
-        last_county = getSharedPreferences("last_county", MODE_PRIVATE);//获取存储的城市id
-        QWeather.getWeather24Hourly(getApplicationContext(),
-                last_county.getString("id", null), new QWeather.OnResultWeatherHourlyListener() {
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.i(TAG, "getWeather onError: " + e);
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(getApplicationContext(), "逐小时数据获取失败" + e, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onSuccess(WeatherHourlyBean weatherHourlyBean) {
-                        if (Code.OK == weatherHourlyBean.getCode()) {
-                            List<WeatherHourlyBean.HourlyBean> hourlyDate = weatherHourlyBean.getHourly();
-                            List<Hourly> hourlyList = new ArrayList<>();
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    int i;
-                                    for (i = 0; i < hourlyDate.size(); i++) {
-                                        Hourly hourly = new Hourly(hourlyDate.get(i).getTemp() + "℃", hourlyDate.get(i).getText(),
-                                                hourlyDate.get(i).getWindScale() + "级", hourlyDate.get(i).getFxTime().substring(11, 16));
-                                        //上述的getFxTime返回的数据过长，只截取第12-16的内容，其中包含逐小时预报天气的小时和分钟信息
-                                        hourlyList.add(hourly);
-                                    }
-                                    hourlyAdapter = new HourlyAdapter(hourlyList);
-                                    hourlyAdapter.notifyDataSetChanged();
-
-                                    recyclerView_hourly.setAdapter(hourlyAdapter);
-                                }
-                            });
-                        }
-
-                    }
-                });
     }
 
 }
