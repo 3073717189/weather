@@ -3,7 +3,9 @@
     android:layout_width="80dp"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_margin="15dp">
+    android:layout_margin="15dp"
+    android:paddingTop="15dp"
+    android:paddingBottom="15dp">
 <TextView
     android:gravity="center"
     android:id="@+id/hourly_temp"
@@ -11,7 +13,9 @@
     android:textSize="15dp"
     android:layout_height="wrap_content"
     android:maxLines="1"/>
-    <TextView
+    <ImageView
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:gravity="center"
         android:id="@+id/hourly_weather"
         android:layout_width="60dp"

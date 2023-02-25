@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import com.example.weather.R;
+import com.example.weather.WeatherUtil;
 
 import java.util.List;
 
@@ -26,11 +28,12 @@ public class ForecastAdapter extends ArrayAdapter<Forecast> {
         View view= LayoutInflater.from(getContext()).inflate(R.layout.forecast_item,parent,false);
     //分别获取textview的实例
     TextView date=view.findViewById(R.id.forecast_date);
-    TextView weather=view.findViewById(R.id.forecast_weather);
+    ImageView weather=view.findViewById(R.id.forecast_weather);
     TextView temp=view.findViewById(R.id.forecast_temp);
     //设置要显示的文字
     date.setText(forecast.getDate());
-    weather.setText(forecast.getWeather());
+    WeatherUtil.changeIcon(weather,Integer.parseInt(forecast.getWeather()));
+   // weather.setText(forecast.getWeather());
     temp.setText(forecast.getTemp());
     return view;
 }

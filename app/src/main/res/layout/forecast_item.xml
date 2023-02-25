@@ -2,8 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
    >
     <TextView
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:textColor="#FFFFFF"
         android:layout_weight="1"
         android:textSize="15dp"
@@ -12,7 +15,9 @@
         android:id="@+id/forecast_date"
         android:gravity="center"
         />
-    <TextView
+    <ImageView
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:textColor="#FFFFFF"
         android:layout_weight="1"
         android:textSize="15dp"
@@ -22,6 +27,8 @@
         android:gravity="center"
         />
     <TextView
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:textColor="#FFFFFF"
         android:layout_weight="1"
         android:textSize="15dp"

@@ -3,12 +3,14 @@ package com.example.weather.hourly;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weather.R;
+import com.example.weather.WeatherUtil;
 import com.example.weather.searchResult.SearchResultAdapter;
 
 import java.time.temporal.Temporal;
@@ -34,7 +36,8 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.ViewHolder
         //在这里对rv中的控件进行操作以及设计点击事件
         Hourly hourly = hourlyList.get(position);
 holder.temp.setText(hourly.getTemp());
-holder.weather.setText(hourly.getWeather());
+        WeatherUtil.changeIcon(holder.weather,Integer.parseInt(hourly.getWeather()));
+//holder.weather.setText(hourly.getWeather());
 holder.wind_level.setText(hourly.getWind_level());
 //holder.air_level.setText(hourly.getAir_level());
 holder.time.setText(hourly.getTime());
@@ -49,7 +52,7 @@ holder.time.setText(hourly.getTime());
     public static class ViewHolder extends RecyclerView.ViewHolder {
         View hourlyView;
         TextView temp;
-        TextView weather;
+        ImageView weather;
         TextView wind_level;
      //   TextView air_level;
         TextView time;

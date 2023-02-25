@@ -297,12 +297,6 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onError(Throwable e) {
                         Log.i(TAG, "getWeather onError: " + e);
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(getApplicationContext(), "逐小时数据获取失败" + e, Toast.LENGTH_SHORT).show();
-                            }
-                        });
                     }
 
                     @Override
@@ -315,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
                                 public void run() {
                                     int i;
                                     for (i = 0; i < hourlyDate.size(); i++) {
-                                        Hourly hourly = new Hourly(hourlyDate.get(i).getTemp() + "℃", hourlyDate.get(i).getText(),
+                                        Hourly hourly = new Hourly(hourlyDate.get(i).getTemp() + "℃", hourlyDate.get(i).getIcon(),
                                                 hourlyDate.get(i).getWindScale() + "级", hourlyDate.get(i).getFxTime().substring(11, 16));
                                         //上述的getFxTime返回的数据过长，只截取第12-16的内容，其中包含逐小时预报天气的小时和分钟信息
                                         hourlyList.add(hourly);
@@ -412,7 +406,7 @@ public class MainActivity extends AppCompatActivity {
                                             "-" + dailyBeanList.get(0).getTempMax() + "℃");
                                     for (int i = 0; i < dailyBeanList.toArray().length; i++) {
                                         Forecast forecast = new Forecast(dailyBeanList.get(i).getFxDate(),
-                                                dailyBeanList.get(i).getTextDay(), dailyBeanList.get(i).getTempMin()
+                                                dailyBeanList.get(i).getIconDay(), dailyBeanList.get(i).getTempMin()
                                                 + "-" + dailyBeanList.get(i).getTempMax() + "℃");
                                         forecastList.add(forecast);
                                     }

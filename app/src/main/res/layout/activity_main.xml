@@ -30,7 +30,7 @@
                     android:id="@+id/city_list"
                     android:layout_width="35dp"
                     android:layout_height="30dp"
-                    android:background="@drawable/button_switch" />
+                    android:background="@drawable/add" />
 
                 <TextView
                     android:id="@+id/county_name"
@@ -71,7 +71,8 @@
                     android:layout_weight="1"
                     android:gravity="right"
                     android:textColor="#FFFFFF"
-                    android:textSize="15dp" /> <!--今日天气-->
+                    android:textSize="15dp"
+                    android:paddingRight="20dp"/> <!--今日天气-->
                 <TextView
                     android:id="@+id/temp_today"
                     android:layout_width="match_parent"
@@ -99,9 +100,9 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1">
+                        android:layout_weight="2">
 
-                        <ImageButton
+                        <ImageView
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:background="@drawable/air" />
@@ -112,7 +113,8 @@
                             android:layout_height="30dp"
                             android:layout_weight="1"
                             android:gravity="left|center_vertical"
-                            android:textColor="#FFFFFF" />
+                            android:textColor="#FFFFFF"
+                            android:textSize="15dp"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -120,9 +122,10 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1">
 
-                        <ImageButton
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
+                        <ImageView
+                            android:layout_margin="5dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:background="@drawable/pollute" />
 
                         <TextView
@@ -131,7 +134,8 @@
                             android:layout_height="30dp"
                             android:layout_weight="1"
                             android:gravity="left|center_vertical"
-                            android:textColor="#FFFFFF" />
+                            android:textColor="#FFFFFF"
+                            android:textSize="15dp"/>
 
                         <TextView
                             android:id="@+id/aqi_pm2.5"
@@ -139,7 +143,8 @@
                             android:layout_height="30dp"
                             android:layout_weight="1"
                             android:gravity="left|center_vertical"
-                            android:textColor="#FFFFFF" />
+                            android:textColor="#FFFFFF"
+                            android:textSize="15dp"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -213,16 +218,16 @@
                     android:id="@+id/wind"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"><!--风-->
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp" /><!--增加空白区域使界面更美观-->
+                    android:orientation="vertical"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp"><!--风-->
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <ImageButton
+                        <ImageView
                             android:layout_width="70dp"
                             android:layout_height="70dp"
                             android:background="@drawable/wind" />
@@ -233,21 +238,24 @@
                             android:layout_height="70dp"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:textColor="#FFFFFF" />   <!--风向-->
+                            android:textColor="#FFFFFF"
+                            android:textSize="20dp"/>   <!--风向-->
                         <TextView
                             android:id="@+id/windscale_now"
                             android:layout_width="match_parent"
                             android:layout_height="70dp"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:textColor="#FFFFFF" /> <!--风力等级-->
+                            android:textColor="#FFFFFF"
+                            android:textSize="20dp"/> <!--风力等级-->
                         <TextView
                             android:id="@+id/windspeed_now"
                             android:layout_width="match_parent"
                             android:layout_height="70dp"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:textColor="#FFFFFF" /> <!--风速-->
+                            android:textColor="#FFFFFF"
+                            android:textSize="20dp"/> <!--风速-->
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -267,16 +275,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"><!--生活建议-->
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp" /><!--增加空白区域使界面更美观-->
+                    android:padding="10dp"
+                    android:layout_margin="15dp"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp"><!--生活建议-->
+
                     <TextView
                         android:id="@+id/spt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textMultiLine"
                         android:textColor="#FFFFFF"
+                        android:textSize="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp"
                         />
 
                     <TextView
@@ -284,21 +296,27 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textMultiLine"
-                        android:textColor="#FFFFFF" />
+                        android:textColor="#FFFFFF"
+                        android:textSize="15dp"
+                        android:layout_marginBottom="15dp"/>
 
                     <TextView
                         android:id="@+id/drsg"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textMultiLine"
-                        android:textColor="#FFFFFF" />
+                        android:textColor="#FFFFFF"
+                        android:textSize="15dp"
+                        android:layout_marginBottom="15dp"/>
 
                     <TextView
                         android:id="@+id/comf"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textMultiLine"
-                        android:textColor="#FFFFFF" />
+                        android:textColor="#FFFFFF"
+                        android:textSize="15dp"
+                        android:layout_marginBottom="15dp"/>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -317,12 +335,11 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="10dp"><!--其他-->
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp" /><!--增加空白区域使界面更美观-->
+
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp">
 
                         <TextView
                             android:layout_width="match_parent"
@@ -331,7 +348,8 @@
                             android:gravity="left"
                             android:paddingLeft="50dp"
                             android:text="相对湿度"
-                            android:textColor="#FFFFFF" />
+                            android:textColor="#FFFFFF"
+                            android:textSize="15dp"/>
 
                         <TextView
                             android:id="@+id/humidity_now"
@@ -339,12 +357,14 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:textColor="#FFFFFF" />
+                            android:textColor="#FFFFFF"
+                            android:textSize="15dp"/>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp">
 
                         <TextView
                             android:layout_width="match_parent"
@@ -353,7 +373,8 @@
                             android:gravity="left"
                             android:paddingLeft="50dp"
                             android:text="降水量"
-                            android:textColor="#FFFFFF" />
+                            android:textColor="#FFFFFF"
+                            android:textSize="15dp"/>
 
                         <TextView
                             android:id="@+id/precip_now"
@@ -361,12 +382,14 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:textColor="#FFFFFF" />
+                            android:textColor="#FFFFFF"
+                            android:textSize="15dp"/>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp">
 
                         <TextView
                             android:layout_width="match_parent"
@@ -375,7 +398,8 @@
                             android:gravity="left"
                             android:paddingLeft="50dp"
                             android:text="大气压强"
-                            android:textColor="#FFFFFF" />
+                            android:textColor="#FFFFFF"
+                            android:textSize="15dp"/>
 
                         <TextView
                             android:id="@+id/pressure_now"
@@ -383,12 +407,14 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:textColor="#FFFFFF" />
+                            android:textColor="#FFFFFF"
+                            android:textSize="15dp"/>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp">
 
                         <TextView
                             android:layout_width="match_parent"
@@ -397,7 +423,8 @@
                             android:gravity="left"
                             android:paddingLeft="50dp"
                             android:text="能见度"
-                            android:textColor="#FFFFFF" />
+                            android:textColor="#FFFFFF"
+                            android:textSize="15dp"/>
 
                         <TextView
                             android:id="@+id/vis_now"
@@ -405,12 +432,14 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:textColor="#FFFFFF" />
+                            android:textColor="#FFFFFF"
+                            android:textSize="15dp"/>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp">
 
                         <TextView
                             android:layout_width="match_parent"
@@ -419,7 +448,8 @@
                             android:gravity="left"
                             android:paddingLeft="50dp"
                             android:text="当前云量"
-                            android:textColor="#FFFFFF" />
+                            android:textColor="#FFFFFF"
+                            android:textSize="15dp"/>
 
                         <TextView
                             android:id="@+id/dew_now"
@@ -427,7 +457,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:textColor="#FFFFFF" />
+                            android:textColor="#FFFFFF"
+                            android:textSize="15dp"/>
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
