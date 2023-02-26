@@ -266,7 +266,14 @@ public class MainActivity extends AppCompatActivity {
             other.setVisibility(View.GONE);
         if (!view_state.getBoolean("hourly_state", true))
             hourly.setVisibility(View.GONE);
-
+life.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+        //生活建议区域点击事件，跳转至生活建议详情页
+        Intent intent=new Intent(MainActivity.this,LifeActivity.class);
+        startActivity(intent);
+    }
+});
         night_mode = getSharedPreferences("night_mode", MODE_PRIVATE);//获取夜间模式相关状态信息
         start = night_mode.getInt("start_hour", 0) * 60 + night_mode.getInt("start_minute", 0);
         end = night_mode.getInt("end_hour", 0) * 60 + night_mode.getInt("end_minute", 0);
@@ -361,7 +368,7 @@ public class MainActivity extends AppCompatActivity {
                                     pressure_now_textview.setText(now.getPressure() + "hPa");
                                     vis_now_textview.setText(now.getVis() + "公里");
                                     dew_now_textview.setText(now.getDew());
-                                    feel_temp_now_textview.setText(now.getFeelsLike()+"℃");
+                                    feel_temp_now_textview.setText(now.getFeelsLike() + "℃");
                                     //如果是夜间模式，将背景设置为夜间模式图片，否则根据天气设置图片
                                     if (night_switch_state) {
                                         getWindow().setBackgroundDrawableResource(R.drawable.background_night);
