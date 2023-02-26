@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView pressure_now_textview;//大气压强
     private TextView vis_now_textview;//能见度
     private TextView dew_now_textview;//当前云量
+    private TextView feel_temp_now_textview;
 
     private TextView aqi_primary, aqi_category, aqi_pm2p5;//空气质量相关
 
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         HeConfig.init("HE2301031356041355", "210e7e865a58471ca4dee69484f722ff");//初始化key
         HeConfig.switchToDevService();//切换为免费版
 
-        night_switch_state=false;
+        night_switch_state = false;
 
         view_state = getSharedPreferences("view_state", MODE_PRIVATE);//读取控件显示状态，初始化控件
         last_county = getSharedPreferences("last_county", MODE_PRIVATE);
@@ -122,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 swipeRefresh.setRefreshing(true);
                 Toast.makeText(getApplicationContext(), "刷新中", Toast.LENGTH_SHORT).show();
                 // 获取数据
-               GetData();
+                GetData();
                 swipeRefresh.setRefreshing(false);
                 Toast.makeText(getApplicationContext(), "刷新完成！", Toast.LENGTH_SHORT).show();
             }
@@ -218,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     private void InitLayout() {
         //设置透明状态栏，对应xml文件中添加属性android:fitsSystemWindows="true"
         Window window = getWindow();
@@ -235,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
         pressure_now_textview = (TextView) findViewById(R.id.pressure_now);//大气压强显示文本框
         vis_now_textview = (TextView) findViewById(R.id.vis_now);//能见度显示文本框
         dew_now_textview = (TextView) findViewById(R.id.dew_now);//当前云量显示文本框
-
+        feel_temp_now_textview = (TextView) findViewById(R.id.feel_temp_now);//当前体感温度
 
         aqi_primary = (TextView) findViewById(R.id.aqi_primary);
         aqi_category = (TextView) findViewById(R.id.aqi_category);
@@ -282,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (night_mode.getBoolean("switch_mode", false)) {//检测夜间模式开关状态
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);//启用夜间模式
-            night_switch_state=true;
+            night_switch_state = true;
 
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);//关闭夜间模式
@@ -359,11 +361,13 @@ public class MainActivity extends AppCompatActivity {
                                     pressure_now_textview.setText(now.getPressure() + "hPa");
                                     vis_now_textview.setText(now.getVis() + "公里");
                                     dew_now_textview.setText(now.getDew());
+                                    feel_temp_now_textview.setText(now.getFeelsLike()+"℃");
                                     //如果是夜间模式，将背景设置为夜间模式图片，否则根据天气设置图片
-                                    if(night_switch_state){
+                                    if (night_switch_state) {
                                         getWindow().setBackgroundDrawableResource(R.drawable.background_night);
-                                    }else {
-                                    WeatherUtil.changeBackground(MainActivity.this,Integer.parseInt(now.getIcon()));}
+                                    } else {
+                                        WeatherUtil.changeBackground(MainActivity.this, Integer.parseInt(now.getIcon()));
+                                    }
                                 }
                             });
                         } else {

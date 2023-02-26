@@ -3,6 +3,7 @@ package com.example.weather;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,11 +18,14 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 
-
+import com.example.weather.hotcity.HotCity;
+import com.example.weather.hotcity.HotCityAdapter;
 import com.example.weather.searchResult.SearchCity;
 import com.example.weather.searchResult.SearchResultAdapter;
 import com.qweather.sdk.bean.base.Code;
 
+import com.qweather.sdk.bean.base.Lang;
+import com.qweather.sdk.bean.base.Range;
 import com.qweather.sdk.bean.geo.GeoBean;
 import com.qweather.sdk.view.QWeather;
 
@@ -29,7 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerView_search_result;
+    private RecyclerView recyclerView_hot_city;
     private SearchResultAdapter searchResultAdapter;
     public String TAG;
     ImageButton search_button;
@@ -43,8 +48,42 @@ public class SearchActivity extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);//删除标题栏
         setContentView(R.layout.activity_search);
 
-        recyclerView = findViewById(R.id.search_result_list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));//初始化rv
+        recyclerView_search_result = findViewById(R.id.search_result_list);
+        recyclerView_search_result.setLayoutManager(new LinearLayoutManager(this));//初始化rv
+recyclerView_hot_city=findViewById(R.id.hot_city_list);
+        StaggeredGridLayoutManager staggered_grid_layoutManager = new
+                StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+recyclerView_hot_city.setLayoutManager(staggered_grid_layoutManager);
+        QWeather.getGeoTopCity(SearchActivity.this,20, Range.CN, Lang.ZH_HANS, new QWeather.OnResultGeoListener() {
+            //以下获取热门城市并用rv展示
+            @Override
+            public void onError(Throwable e) {
+                Log.i(TAG,"getWeather onError: " + e);
+            }
+
+            @Override
+            public void onSuccess(GeoBean geoBean) {
+if(Code.OK==geoBean.getCode()){
+    //如果查询到了城市，获取该城市id和名字，将城市列表用rv展示
+    List<GeoBean.LocationBean> locationBean = geoBean.getLocationBean();
+    List<HotCity>hotCityList=new ArrayList<>();
+
+    handler.post(new Runnable() {
+        @Override
+        public void run() {
+            int i;
+            for(i=0;i<locationBean.size();i++){
+                HotCity hotCity=new HotCity(locationBean.get(i).getId()
+                        ,locationBean.get(i).getName());
+                hotCityList.add(hotCity);
+            }
+            HotCityAdapter hotCityAdapter = new HotCityAdapter(getApplicationContext(),hotCityList,mHandler);
+            recyclerView_hot_city.setAdapter(hotCityAdapter);
+        }
+    });
+}
+            }
+        });
 
 
         search_button=(ImageButton) findViewById(R.id.search_button);
@@ -70,12 +109,15 @@ handler.post(new Runnable() {
                     public void onSuccess(GeoBean geoBean) {
                         if (Code.OK == geoBean.getCode()) {
 //如果查询到了城市，获取该城市id和名字，将城市列表用rv展示
+
+
                             List<GeoBean.LocationBean> locationBean = geoBean.getLocationBean();
                             List<SearchCity>searchCities=new ArrayList<>();
 
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
+                                    recyclerView_hot_city.setVisibility(View.GONE);//隐藏热点城市的rv，避免它们重叠以及影响用户体验
                                     int i;
                                     for(i=0;i<locationBean.size();i++){
                                         SearchCity searchCity=new SearchCity(locationBean.get(i).getAdm1()+","+
@@ -84,7 +126,7 @@ handler.post(new Runnable() {
                                         searchCities.add(searchCity);
                                     }
                                     searchResultAdapter = new SearchResultAdapter(getApplicationContext(),searchCities,mHandler);
-                                    recyclerView.setAdapter(searchResultAdapter);
+                                    recyclerView_search_result.setAdapter(searchResultAdapter);
                                 }
                             });
                         }

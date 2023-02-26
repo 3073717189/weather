@@ -34,6 +34,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     final Handler handler = new Handler();
 SharedPreferences last_county;
     private Handler mHandler;
+    //为了设计点击事件，所以要传入context参数，为了在子线程中跳转回主活动并销毁活动，传入handler
     public SearchResultAdapter(Context context,List<SearchCity> cities,Handler handler) {
         this.cities = cities;
         this.mContext=context;
