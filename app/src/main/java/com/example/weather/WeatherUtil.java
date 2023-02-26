@@ -1,8 +1,84 @@
 package com.example.weather;
 
+import android.app.Activity;
+import android.content.Context;
 import android.widget.ImageView;
 
 public class WeatherUtil {
+    /**
+     * 跟随当前切换背景图片
+     * @param code 天气状况代码
+     * @param activity 传入当前活动
+     */
+    public static void changeBackground(Activity activity, int code){
+        switch (code){
+            case 100:
+            case 150:
+                //晴
+               activity.getWindow().setBackgroundDrawableResource(R.drawable.background_sunny);
+                break;
+            case 101:
+            case 151:
+            case 102:
+            case 152:
+            case 103:
+            case 153:
+                // 多云
+               activity.getWindow().setBackgroundDrawableResource(R.drawable.background_cloudy);
+                break;
+            case 300:
+            case 301:
+            case 302:
+            case 303:
+            case 305:
+            case 306:
+            case 307:
+            case 308:
+            case 309:
+            case 310:
+            case 311:
+            case 312:
+            case 313:
+            case 314:
+            case 315:
+            case 316:
+            case 317:
+            case 318:
+            case 319:
+            case 320:
+            case 324:
+            case 350:
+            case 351:
+            case 399:
+
+                // 雨
+                activity.getWindow().setBackgroundDrawableResource(R.drawable.background_rainy);
+                break;
+
+            case 400:
+            case 401:
+            case 402:
+            case 403:
+            case 404:
+            case 405:
+            case 406:
+            case 407:
+            case 408:
+            case 409:
+            case 410:
+            case 456:
+            case 457:
+            case 499:
+                //雪
+                activity.getWindow().setBackgroundDrawableResource(R.drawable.background_snowy);
+                break;
+
+            case 104:
+                activity.getWindow().setBackgroundDrawableResource(R.drawable.background_overcast);
+                break;
+
+        }
+    }
     /**
      * 更改天气状态图标
      * @param weatherStateIcon 显示天气状态的ImageView

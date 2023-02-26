@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+
     android:orientation="vertical"
     tools:context=".MainActivity"
     android:fitsSystemWindows="true"
@@ -110,7 +110,7 @@
                         <TextView
                             android:id="@+id/aqi_category"
                             android:layout_width="match_parent"
-                            android:layout_height="30dp"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="left|center_vertical"
                             android:textColor="#FFFFFF"
@@ -131,7 +131,7 @@
                         <TextView
                             android:id="@+id/aqi_primary"
                             android:layout_width="wrap_content"
-                            android:layout_height="30dp"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="left|center_vertical"
                             android:textColor="#FFFFFF"
@@ -140,7 +140,7 @@
                         <TextView
                             android:id="@+id/aqi_pm2.5"
                             android:layout_width="wrap_content"
-                            android:layout_height="30dp"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="left|center_vertical"
                             android:textColor="#FFFFFF"

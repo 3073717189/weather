@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private HourlyAdapter hourlyAdapter;//上述rv的适配器
     // 以下是夜间模式相关
     SharedPreferences night_mode;
+    Boolean night_switch_state;
     int start, now, end;
 
     SharedPreferences view_state;
@@ -99,6 +101,8 @@ public class MainActivity extends AppCompatActivity {
 
         HeConfig.init("HE2301031356041355", "210e7e865a58471ca4dee69484f722ff");//初始化key
         HeConfig.switchToDevService();//切换为免费版
+
+        night_switch_state=false;
 
         view_state = getSharedPreferences("view_state", MODE_PRIVATE);//读取控件显示状态，初始化控件
         last_county = getSharedPreferences("last_county", MODE_PRIVATE);
@@ -278,6 +282,8 @@ public class MainActivity extends AppCompatActivity {
         }
         if (night_mode.getBoolean("switch_mode", false)) {//检测夜间模式开关状态
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);//启用夜间模式
+            night_switch_state=true;
+
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);//关闭夜间模式
         }
@@ -353,7 +359,11 @@ public class MainActivity extends AppCompatActivity {
                                     pressure_now_textview.setText(now.getPressure() + "hPa");
                                     vis_now_textview.setText(now.getVis() + "公里");
                                     dew_now_textview.setText(now.getDew());
-
+                                    //如果是夜间模式，将背景设置为夜间模式图片，否则根据天气设置图片
+                                    if(night_switch_state){
+                                        getWindow().setBackgroundDrawableResource(R.drawable.background_night);
+                                    }else {
+                                    WeatherUtil.changeBackground(MainActivity.this,Integer.parseInt(now.getIcon()));}
                                 }
                             });
                         } else {

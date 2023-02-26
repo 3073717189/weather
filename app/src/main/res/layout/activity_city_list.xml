@@ -18,17 +18,19 @@
         android:background="@drawable/back" />
 
     <TextView
-        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
         android:id="@+id/city_list_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/city_list_back"
+        android:layout_marginTop="20dp"
         android:text="城市管理"
         android:textSize="30dp" />
 
     <LinearLayout
+        android:id="@+id/city_list_rv_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/city_list_textView"
         android:layout_marginTop="30dp"
         >
@@ -39,6 +41,13 @@
     android:orientation="vertical"
    />
     </LinearLayout>
+    <TextView
+        android:layout_marginTop="40dp"
+        android:layout_below="@+id/city_list_rv_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="试试长按那些你不再需要的城市？"
+        android:gravity="center"/>
     <ImageButton
         android:id="@+id/city_list_gps"
         android:layout_width="40dp"
