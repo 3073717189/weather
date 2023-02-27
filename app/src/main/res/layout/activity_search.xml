@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchActivity">
+    tools:context=".SearchActivity"
+    android:background="#F5F5F5"
+    android:fitsSystemWindows="true">
 
     <EditText
         android:id="@+id/search_edit"

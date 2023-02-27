@@ -5,49 +5,54 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".CityListActivity"
+    android:background="#F5F5F5"
+    android:fitsSystemWindows="true"
     >
 
     <ImageButton
-        android:id="@+id/city_list_back"
+        android:id="@+id/city_list_search"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
-        android:background="@drawable/back" />
+        android:background="@drawable/ic_search" />
 
     <TextView
-        android:layout_marginLeft="20dp"
         android:id="@+id/city_list_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/city_list_back"
+        android:layout_below="@+id/city_list_search"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:text="城市管理"
         android:textSize="30dp" />
 
+
     <LinearLayout
         android:id="@+id/city_list_rv_wrapper"
+        android:layout_below="@+id/city_list_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/city_list_textView"
-        android:layout_marginTop="30dp"
+
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
         >
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="试试长按那些你不再需要的城市？"
+            android:gravity="center"/>
 <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/city_list_rv"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
    />
+
     </LinearLayout>
-    <TextView
-        android:layout_marginTop="40dp"
-        android:layout_below="@+id/city_list_rv_wrapper"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="试试长按那些你不再需要的城市？"
-        android:gravity="center"/>
     <ImageButton
         android:id="@+id/city_list_gps"
         android:layout_width="40dp"
@@ -58,12 +63,4 @@
         android:layout_marginLeft="10dp"
         android:background="@drawable/gps" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/city_list_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:backgroundTint="#00000000"
-        android:src="@drawable/ic_search" />
 </RelativeLayout>

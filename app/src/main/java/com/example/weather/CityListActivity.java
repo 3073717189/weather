@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,7 +49,7 @@ public class CityListActivity extends AppCompatActivity implements LocationCallb
 
     SharedPreferences last_county;
     public String TAG;
-    FloatingActionButton city_list_search;
+    ImageButton city_list_search;
     ImageButton city_list_back;
     //以下定位相关
     public LocationClient mLocationClient = null;
@@ -69,6 +70,13 @@ public class CityListActivity extends AppCompatActivity implements LocationCallb
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);//删除标题栏
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_list);
+
+        //设置透明状态栏，对应xml文件中添加属性android:fitsSystemWindows="true"
+        Window window = getWindow();
+        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        window.setStatusBarColor(Color.TRANSPARENT);
+        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//状态栏深色字体
+
         registerIntent();//初始化定位
         LocationClient.setAgreePrivacy(true);//同意隐私保护
 
@@ -93,7 +101,7 @@ public class CityListActivity extends AppCompatActivity implements LocationCallb
     };
 
     private void initLayout() {
-        city_list_search = (FloatingActionButton) findViewById(R.id.city_list_search);
+        city_list_search = (ImageButton) findViewById(R.id.city_list_search);
         city_list_search.setOnClickListener(new View.OnClickListener() {
             //点击查询按钮跳转至搜索城市页面
             @Override
@@ -103,22 +111,7 @@ public class CityListActivity extends AppCompatActivity implements LocationCallb
                 finish();
             }
         });
-        city_list_back = (ImageButton) findViewById(R.id.city_list_back);
-        city_list_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //点击返回按钮时间，其实这个图片按钮和返回按键是一样的功能
-                //如果是用户第一次打开尚未定位时，在城市列表选择了返回，那么认为用户是想退出软件，以下代码关闭软件
-                if (last_county.getString("id", null) == null) {
-                    finish();
-                }//若用户在此前已经选择过城市，那么认为用户是不想更改定位，为其返回至主页
-                else {
-                    Intent intent = new Intent(CityListActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-            }
-        });
+
         GPSButton = (ImageButton) findViewById(R.id.city_list_gps);
         GPSButton.setOnClickListener(new View.OnClickListener() {
             //编辑定位按钮点击事件
