@@ -34,26 +34,17 @@ public class WeatherService extends Service {
     final Handler handler = new Handler();
     SharedPreferences last_county;
     public String TAG;
-    String temp, temp_now, weather;
 
     @Override
     public void onCreate() {
 
         super.onCreate();
         Log.d("WeatherService", "onCreate executed");
-
-
     }
-
     public WeatherService() {
-
     }
-
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-
         AlarmManager AutoUpdate = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         long triggerAtTime = SystemClock.elapsedRealtime() + 60* 60 * 1000;//每小时刷新一次，后面的数字为刷新间隔的毫秒数
         Intent service_intent = new Intent(this, WeatherService.class);
@@ -77,8 +68,6 @@ public class WeatherService extends Service {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "myChannelId");
         builder.setSmallIcon(R.mipmap.ic_launcher).setContentIntent(pi);
         builder.setOngoing(true);
-
-
         QWeather.getWeatherNow(WeatherService.this, last_county.getString("id", null),
                 Lang.ZH_HANS, Unit.METRIC, new QWeather.OnResultWeatherNowListener() {
                     @Override

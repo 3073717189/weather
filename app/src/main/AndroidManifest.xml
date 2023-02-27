@@ -43,9 +43,6 @@
                 android:resource="@xml/gdt_file_path" />
         </provider>
 
-        <activity
-            android:name=".ADActivity"
-            android:exported="false" />
 
         <service
             android:name=".service.WeatherService"

@@ -327,12 +327,6 @@
             </androidx.cardview.widget.CardView>
 
 
-            <Button
-                android:id="@+id/ad_Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="查看广告" />
         </LinearLayout>
     </ScrollView>
 
