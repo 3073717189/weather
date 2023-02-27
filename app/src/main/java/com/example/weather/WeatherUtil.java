@@ -78,6 +78,7 @@ public class WeatherUtil {
                 break;
             default:
                 activity.getWindow().setBackgroundDrawableResource(R.drawable.background_cloudy);
+
         }
     }
     /**
