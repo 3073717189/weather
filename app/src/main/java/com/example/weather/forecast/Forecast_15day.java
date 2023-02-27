@@ -1,10 +1,11 @@
 package com.example.weather.forecast;
 
-public class Forecast {
-    private String date;
-    private String weatherDay;
-    private String temp;
+public class Forecast_15day {
+    private String date;//日期
+    private String weatherDay;//白天天气
     private String weatherNight;//夜晚天气
+    private String maxTemp;//最高温度
+    private String minTemp;//最低温度
     private String sunrise;//日出
     private String sunset;//日落
     private String moonRise;//月升
@@ -24,36 +25,21 @@ public class Forecast {
     private String uvInDex;//紫外线强度指数
     private String vis;//能见度
 
-    public Forecast(String date, String weatherDay, String temp,
-                    String weatherNight, String sunrise, String sunset,
-                    String moonRise, String moonSet, String moonPhase,
-                    String moonPhaseIcon, String windDirDay,
-                    String winDirNight, String windScaleDay,
-                    String windScaleNight, String windSpeedDay, String
-                            windSpeedNight, String humidity, String precip,
-                    String pressure, String could, String uvInDex, String vis) {
+    public Forecast_15day(String date, String weatherDay, String weatherNight, String maxTemp, String minTemp, String windScaleDay) {
         this.date = date;
         this.weatherDay = weatherDay;
-        this.temp = temp;
         this.weatherNight = weatherNight;
-        this.sunrise = sunrise;
-        this.sunset = sunset;
-        this.moonRise = moonRise;
-        this.moonSet = moonSet;
-        this.moonPhase = moonPhase;
-        this.moonPhaseIcon = moonPhaseIcon;
-        this.windDirDay = windDirDay;
-        this.winDirNight = winDirNight;
+        this.maxTemp = maxTemp;
+        this.minTemp = minTemp;
         this.windScaleDay = windScaleDay;
-        this.windScaleNight = windScaleNight;
-        this.windSpeedDay = windSpeedDay;
-        this.windSpeedNight = windSpeedNight;
-        this.humidity = humidity;
-        this.precip = precip;
-        this.pressure = pressure;
-        this.could = could;
-        this.uvInDex = uvInDex;
-        this.vis = vis;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getWeatherDay() {
@@ -70,6 +56,22 @@ public class Forecast {
 
     public void setWeatherNight(String weatherNight) {
         this.weatherNight = weatherNight;
+    }
+
+    public String getMaxTemp() {
+        return maxTemp;
+    }
+
+    public void setMaxTemp(String maxTemp) {
+        this.maxTemp = maxTemp;
+    }
+
+    public String getMinTemp() {
+        return minTemp;
+    }
+
+    public void setMinTemp(String minTemp) {
+        this.minTemp = minTemp;
     }
 
     public String getSunrise() {
@@ -214,28 +216,5 @@ public class Forecast {
 
     public void setVis(String vis) {
         this.vis = vis;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-
-    public String getTemp() {
-        return temp;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-
-    public void setTemp(String temp) {
-        this.temp = temp;
-    }
-    public Forecast(String date,String weatherDay,String temp){
-        this.date=date;
-        this.weatherDay=weatherDay;
-        this.temp=temp;
     }
 }

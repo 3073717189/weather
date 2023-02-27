@@ -165,10 +165,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp"><!--七天天气预报-->
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp" /><!--增加空白区域使界面更美观-->
+                    android:padding="10dp"
+                    android:layout_marginTop="20dp"
+                    android:paddingTop="15dp"><!--七天天气预报-->
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -177,8 +176,8 @@
                         android:textColor="#FFFFFF"
                         android:textSize="20dp" />
 
-                    <com.example.weather.MyListView
-                        android:id="@+id/forecast_lv"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/forecast_rv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
@@ -194,14 +193,17 @@
                 app:cardCornerRadius="2dp">
             <LinearLayout
                 android:id="@+id/hourly"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/rv_hourly"
                     />
+
+
+
             </LinearLayout>
             </androidx.cardview.widget.CardView>
             <androidx.cardview.widget.CardView
@@ -317,6 +319,21 @@
                         android:textColor="#FFFFFF"
                         android:textSize="15dp"
                         android:layout_marginBottom="15dp"/>
+                    <TextView
+                        android:id="@+id/life_button"
+                        android:text="查看全部生活建议"
+                        android:textSize="18dp"
+                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:padding="15dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:background="@drawable/radius_textview"
+
+                        />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

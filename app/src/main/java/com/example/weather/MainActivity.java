@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView spt, cw, drsg, comf;//生活建议
 
-    MyListView listView;
+    RecyclerView recyclerView_forecast;
     private TextView county_name;
     SharedPreferences last_county;
     final Handler handler = new Handler();
@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
         Window window = getWindow();
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         window.setStatusBarColor(Color.TRANSPARENT);
-        listView = findViewById(R.id.forecast_lv);
+
         temp_today = (TextView) findViewById(R.id.temp_today);//今日温度文本显示框
         weather_now_textview = (TextView) findViewById(R.id.weather_now);//当前天气显示文本框
         temp_now_textview = (TextView) findViewById(R.id.temperature_now);//当前温度显示文本框
@@ -238,7 +238,6 @@ public class MainActivity extends AppCompatActivity {
         vis_now_textview = (TextView) findViewById(R.id.vis_now);//能见度显示文本框
         dew_now_textview = (TextView) findViewById(R.id.dew_now);//当前云量显示文本框
         feel_temp_now_textview = (TextView) findViewById(R.id.feel_temp_now);//当前体感温度
-
         aqi_primary = (TextView) findViewById(R.id.aqi_primary);
         aqi_category = (TextView) findViewById(R.id.aqi_category);
         aqi_pm2p5 = (TextView) findViewById(R.id.aqi_pm2_5);//空气质量相关显示框
@@ -266,14 +265,14 @@ public class MainActivity extends AppCompatActivity {
             other.setVisibility(View.GONE);
         if (!view_state.getBoolean("hourly_state", true))
             hourly.setVisibility(View.GONE);
-life.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View view) {
-        //生活建议区域点击事件，跳转至生活建议详情页
-        Intent intent=new Intent(MainActivity.this,LifeActivity.class);
-        startActivity(intent);
-    }
-});
+        life.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //生活建议区域点击事件，跳转至生活建议详情页
+                Intent intent = new Intent(MainActivity.this, LifeActivity.class);
+                startActivity(intent);
+            }
+        });
         night_mode = getSharedPreferences("night_mode", MODE_PRIVATE);//获取夜间模式相关状态信息
         start = night_mode.getInt("start_hour", 0) * 60 + night_mode.getInt("start_minute", 0);
         end = night_mode.getInt("end_hour", 0) * 60 + night_mode.getInt("end_minute", 0);
@@ -406,9 +405,13 @@ life.setOnClickListener(new View.OnClickListener() {
                         }
                     }
                 });
-
+        recyclerView_forecast = findViewById(R.id.forecast_rv);
+        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getApplicationContext());
+        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
+        recyclerView_forecast.setLayoutManager(linearLayoutManager);
         QWeather.getWeather7D(MainActivity.this, last_county.getString("id", null),
                 new QWeather.OnResultWeatherDailyListener() {
+
                     @Override
                     public void onError(Throwable e) {
                         Log.i(TAG, "getWeather onError: " + e);
@@ -426,14 +429,23 @@ life.setOnClickListener(new View.OnClickListener() {
                                     temp_today.setText(dailyBeanList.get(0).getTempMin() +
                                             "-" + dailyBeanList.get(0).getTempMax() + "℃");
                                     for (int i = 0; i < dailyBeanList.toArray().length; i++) {
-                                        Forecast forecast = new Forecast(dailyBeanList.get(i).getFxDate(),
-                                                dailyBeanList.get(i).getIconDay(), dailyBeanList.get(i).getTempMin()
-                                                + "-" + dailyBeanList.get(i).getTempMax() + "℃");
+                                        Forecast forecast = new Forecast(dailyBeanList.get(i).getFxDate().substring(5,10),
+                                                dailyBeanList.get(i).getIconDay(),dailyBeanList.get(i).getTempMin()
+                                                + "-" + dailyBeanList.get(i).getTempMax() + "℃",
+                                                dailyBeanList.get(i).getIconNight(), dailyBeanList.get(i).getSunrise(), dailyBeanList.get(i).getSunset(),
+                                                dailyBeanList.get(i).getMoonRise(), dailyBeanList.get(i).getMoonSet(), dailyBeanList.get(i).getMoonPhase(),
+                                                dailyBeanList.get(i).getMoonPhaseIcon(), dailyBeanList.get(i).getWindDirDay()
+                                                , dailyBeanList.get(i).getWindDirNight(), dailyBeanList.get(i).getWindScaleDay()+"级", dailyBeanList.get(i).
+                                                getWindScaleNight()+"级", dailyBeanList.get(i).getWindSpeedDay()+"公里/小时", dailyBeanList.get(i).getWindSpeedNight()+"公里/小时",
+                                                dailyBeanList.get(i).getHumidity()+"%", dailyBeanList.get(i).getPrecip()+"mm", dailyBeanList.get(i).getPressure()+"hPa",
+                                                dailyBeanList.get(i).getCloud(), dailyBeanList.get(i).getUvIndex(), dailyBeanList.get(i).getVis()+"公里"
+                                                );
+                                        //其中的日期参数只截取月份和日期
                                         forecastList.add(forecast);
                                     }
-                                    ForecastAdapter adapter = new ForecastAdapter(MainActivity.this,
-                                            R.layout.forecast_item, forecastList);
-                                    listView.setAdapter(adapter);
+                                    ForecastAdapter adapter = new ForecastAdapter(forecastList);
+                                    adapter.notifyDataSetChanged();
+                                    recyclerView_forecast.setAdapter(adapter);
                                 }
                             });
                         }

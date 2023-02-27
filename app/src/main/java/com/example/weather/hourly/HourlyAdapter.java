@@ -54,7 +54,6 @@ holder.time.setText(hourly.getTime());
         TextView temp;
         ImageView weather;
         TextView wind_level;
-     //   TextView air_level;
         TextView time;
         //以上控件将会在onBindViewHolder方法中使用并设置相应的显示内容或者点击事件
 
@@ -65,7 +64,6 @@ holder.time.setText(hourly.getTime());
             temp=itemView.findViewById(R.id.hourly_temp);
             weather=itemView.findViewById(R.id.hourly_weather);
             wind_level=itemView.findViewById(R.id.hourly_wind_level);
-        //    air_level=itemView.findViewById(R.id.hourly_air_level);
             time=itemView.findViewById(R.id.hourly_time);
         }
 

@@ -287,4 +287,36 @@ public class WeatherUtil {
                 //未知
                 weatherStateIcon.setImageResource(R.drawable.weather_icon_999);
                 break;
+            case 800:
+                //新月
+                weatherStateIcon.setImageResource(R.drawable.weather_icon_800);
+                break;
+            case 801:
+                //蛾眉月
+                weatherStateIcon.setImageResource(R.drawable.weather_icon_801);
+                break;
+                case 802:
+                //上弦月
+                weatherStateIcon.setImageResource(R.drawable.weather_icon_802);
+                break;
+                case 803:
+                //盈凸月
+                weatherStateIcon.setImageResource(R.drawable.weather_icon_803);
+                break;
+                case 804:
+                //满月
+                weatherStateIcon.setImageResource(R.drawable.weather_icon_804);
+                break;
+                case 805:
+                //亏凸月
+                weatherStateIcon.setImageResource(R.drawable.weather_icon_805);
+                break;
+                case 806:
+                //下弦月
+                weatherStateIcon.setImageResource(R.drawable.weather_icon_806);
+                break;
+                case 807:
+                //残月
+                weatherStateIcon.setImageResource(R.drawable.weather_icon_807);
+                break;
         }}}

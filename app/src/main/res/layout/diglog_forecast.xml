@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:text="日期"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:textSize="20dp"
+            android:paddingLeft="30dp"/>
+        <TextView
+            android:text="白天天气"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:textSize="20dp"
+            android:paddingLeft="30dp"/> <TextView
+            android:text="温度"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/> <TextView
+            android:text="夜晚天气"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/> <TextView
+            android:text="日出时间"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/> <TextView
+            android:text="日落时间"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/> <TextView
+            android:text="月升时间"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/> <TextView
+            android:text="月落时间"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/> <TextView
+            android:text="月相名称"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/> <TextView
+            android:text="月相图标"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/> <TextView
+            android:text="白天风向"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/> <TextView
+            android:text="夜晚风向"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/> <TextView
+            android:text="白天风力等级"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/> <TextView
+            android:text="夜晚风力等级"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/> <TextView
+            android:text="白天风速"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/> <TextView
+            android:text="夜晚风速"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/><TextView
+            android:text="相对湿度"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/><TextView
+            android:text="降水量"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/><TextView
+            android:text="大气压强"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/><TextView
+            android:text="当天云量"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/><TextView
+            android:text="紫外线强度指数"
+        android:maxLines="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/><TextView
+            android:text="能见度"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+<TextView
+
+    android:id="@+id/forecast_dialog_date"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:textSize="20dp"
+    android:paddingLeft="30dp"/>
+    <ImageView
+        android:id="@+id/forecast_dialog_weatherDay"
+        android:layout_width="match_parent"
+        android:layout_height="27dp"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        />
+        <TextView
+
+            android:id="@+id/forecast_dialog_temp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:textSize="20dp"
+            android:paddingLeft="30dp"/>
+        <ImageView
+            android:id="@+id/forecast_dialog_weatherNight"
+            android:layout_width="match_parent"
+            android:layout_height="27dp"
+            android:layout_margin="8dp"
+            android:textSize="20dp"
+            />
+        <TextView
+
+            android:id="@+id/forecast_dialog_sunrise"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:textSize="20dp"
+            android:paddingLeft="30dp"/><TextView
+
+            android:id="@+id/forecast_dialog_sunset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/><TextView
+
+            android:id="@+id/forecast_dialog_moonRise"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/><TextView
+
+            android:id="@+id/forecast_dialog_moonSet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/><TextView
+
+            android:id="@+id/forecast_dialog_moonPhase"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/>
+
+        <ImageView
+            android:id="@+id/forecast_dialog_moonPhaseIcon"
+            android:layout_width="match_parent"
+            android:layout_height="27dp"
+            android:layout_margin="8dp"
+            android:textSize="20dp"
+           />
+
+        <TextView
+
+            android:id="@+id/forecast_dialog_windDirDay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:textSize="20dp"
+            android:paddingLeft="30dp"/><TextView
+
+            android:id="@+id/forecast_dialog_windDirNight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/>
+        <TextView
+
+            android:id="@+id/forecast_dialog_windScaleDay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:textSize="20dp"
+            android:paddingLeft="30dp"/>
+        <TextView
+
+            android:id="@+id/forecast_dialog_windScaleNight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:textSize="20dp"
+            android:paddingLeft="30dp"/><TextView
+
+            android:id="@+id/forecast_dialog_windSpeedDay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/><TextView
+
+            android:id="@+id/forecast_dialog_windSpeedNight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/><TextView
+
+            android:id="@+id/forecast_dialog_humidity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/><TextView
+
+            android:id="@+id/forecast_dialog_precip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/><TextView
+
+            android:id="@+id/forecast_dialog_pressure"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/><TextView
+
+            android:id="@+id/forecast_dialog_could"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/><TextView
+
+            android:id="@+id/forecast_dialog_uvInDex"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/><TextView
+
+            android:id="@+id/forecast_dialog_vis"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textSize="20dp"
+        android:paddingLeft="30dp"/>
+
+    </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
+</LinearLayout>
