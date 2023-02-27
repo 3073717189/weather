@@ -34,7 +34,6 @@ public class SettingActivity extends AppCompatActivity {
     private Switch night_time_switch;
     private Switch service_switch;
 
-    private Button ad_button;//广告按钮
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +51,6 @@ InitSwitch();//初始化控件显示开关
         window.setStatusBarColor(Color.TRANSPARENT);
 
 
-        ad_button=(Button)findViewById(R.id.ad_Button);
-        ad_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(SettingActivity.this,ADActivity.class);
-                startActivity(intent);//进入广告页
-            }
-        });
 
         night_mode_switch = (Switch) findViewById(R.id.night_mode_switch);//夜间模式开关
         night_mode_switch.setChecked(night_mode.getBoolean("switch_mode", false));//读取存储的夜间模式状态，确定此时夜间模式开关的状态
