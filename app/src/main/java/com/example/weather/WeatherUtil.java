@@ -76,6 +76,8 @@ public class WeatherUtil {
             case 104:
                 activity.getWindow().setBackgroundDrawableResource(R.drawable.background_overcast);
                 break;
+            default:
+                activity.getWindow().setBackgroundDrawableResource(R.drawable.background_cloudy);
 
         }
     }
