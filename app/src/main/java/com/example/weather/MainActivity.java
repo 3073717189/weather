@@ -508,5 +508,8 @@ public class MainActivity extends AppCompatActivity {
                 });
 
     }
-
+    public void onBackPressed(){
+        //在首页点击返回时，直接关闭软件
+        finishAffinity();
+    }
 }
