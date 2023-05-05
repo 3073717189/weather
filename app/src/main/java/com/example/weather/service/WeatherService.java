@@ -85,7 +85,6 @@ public class WeatherService extends Service {
                                 @Override
                                 public void run() {
 //接下来开始从网络获取对应的数据来更新显示
-
                                     builder.setContentTitle(now.getTemp() + "℃   " + now.getText());
                                     notificationManager.notify(1, builder.build());
 

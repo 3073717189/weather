@@ -116,11 +116,8 @@ handler.post(new Runnable() {
                     public void onSuccess(GeoBean geoBean) {
                         if (Code.OK == geoBean.getCode()) {
 //如果查询到了城市，获取该城市id和名字，将城市列表用rv展示
-
-
                             List<GeoBean.LocationBean> locationBean = geoBean.getLocationBean();
                             List<SearchCity>searchCities=new ArrayList<>();
-
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {

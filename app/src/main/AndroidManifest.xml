@@ -27,22 +27,17 @@
         tools:replace="android:allowBackup"
         tools:targetApi="31">
         <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".LifeActivity"
             android:exported="false" />
         <activity
             android:name=".SearchActivity"
             android:exported="false" />
-
-        <provider
-            android:name="com.qq.e.comm.GDTFileProvider"
-            android:authorities="com.example.weather.gdt.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/gdt_file_path" />
-        </provider>
-
 
         <service
             android:name=".service.WeatherService"
@@ -59,16 +54,6 @@
             android:name="com.qq.e.ads.ADActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:multiprocess="true" />
-        <activity
-            android:name="com.qq.e.ads.PortraitADActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:multiprocess="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.qq.e.ads.LandscapeADActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:multiprocess="true"
-            android:screenOrientation="sensorLandscape" />
         <activity
             android:name=".SettingActivity"
             android:exported="false" />

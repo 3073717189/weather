@@ -77,9 +77,10 @@ public class CityListActivity extends AppCompatActivity implements LocationCallb
         window.setStatusBarColor(Color.TRANSPARENT);
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//状态栏深色字体
 
-        registerIntent();//初始化定位
+
         LocationClient.setAgreePrivacy(true);//同意隐私保护
 
+        registerIntent();//初始化定位
         initLocation();//初始化定位
         requestPermission();//初始化定位
         last_county = getSharedPreferences("last_county", MODE_PRIVATE);
@@ -119,14 +120,19 @@ public class CityListActivity extends AppCompatActivity implements LocationCallb
             public void onClick(View view) {
                 LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
                 if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    Toast.makeText(getApplicationContext(), "请打开GPS", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "您尚未打开GPS，请打开GPS后重新进入此页面重试！", Toast.LENGTH_LONG).show();
                 } else {
                     QWeather.getGeoCityLookup(getApplicationContext(), longitude + "," + latitude, new QWeather.OnResultGeoListener() {
                         @Override
                         public void onError(Throwable e) {
                             Log.i(TAG, "getWeather onError: " + e);
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), "位置信息获取失败，可能是因为您未在启动页面前打开GPS，重启页面试试？", Toast.LENGTH_LONG).show();
+                                }
+                            });
                         }
-
                         @Override
                         public void onSuccess(GeoBean geoBean) {
                             if (Code.OK == geoBean.getCode()) {
@@ -151,7 +157,7 @@ public class CityListActivity extends AppCompatActivity implements LocationCallb
         String[] projection = {"id", "name"};
         String sortOrder = "name ASC";
         Cursor cursor = db.query("city", projection, null, null, null, null, sortOrder);
-
+//遍历数据库
         List<CityList> cityLists = new ArrayList<>();
         while (cursor.moveToNext()) {
             String id = cursor.getString(cursor.getColumnIndexOrThrow("id"));
@@ -162,7 +168,7 @@ public class CityListActivity extends AppCompatActivity implements LocationCallb
         cursor.close();
 
         LinearLayoutManager cityLinearLayoutManager=new LinearLayoutManager(getApplicationContext());
-
+//初始化rv
         RecyclerView city_rv;
         city_rv=findViewById(R.id.city_list_rv);
         city_rv.setLayoutManager(cityLinearLayoutManager);

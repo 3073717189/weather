@@ -26,6 +26,12 @@ public class CityDBHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
         onCreate(db);
     }
+    public void deleteAllCities() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete("city", null, null);
+        db.close();
+    }
+
     public String queryCountyId(String countyName) {
         String countyId = null;
         SQLiteDatabase db = this.getWritableDatabase();

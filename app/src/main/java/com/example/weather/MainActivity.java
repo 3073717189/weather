@@ -330,7 +330,6 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                     hourlyAdapter = new HourlyAdapter(hourlyList);
                                     hourlyAdapter.notifyDataSetChanged();
-
                                     recyclerView_hourly.setAdapter(hourlyAdapter);
                                 }
                             });
